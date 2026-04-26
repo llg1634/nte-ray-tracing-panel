@@ -1,5 +1,12 @@
 # 更新日志
 
+## 0.1.6
+
+- 新增目标显卡 profile 选择：本机原配置、RTX 4090、RTX 5080M。
+- 后端统一下发 `profiles`，安装接口支持 `profile` 参数，并把所选 profile 写入 manifest。
+- WebUI 重构安装区：目标显卡选择、DXGI/Full 模式和备份安装按统一逻辑展示。
+- 更新本地构建与发布材料，便于 GitHub Release 分发。
+
 ## 0.1.5
 
 - 纠正发布归属：移除旧 DLSS 面板项目引用，改为明确致谢 OptiScaler 和 DLSSTweaks。

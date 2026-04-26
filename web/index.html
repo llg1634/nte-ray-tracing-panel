@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="异环光追解锁面板：异环光线追踪 / 全景光追一键解锁工具，基于 OptiScaler DXGI / Streamline RTX 4090 GPU spoof，支持备份恢复，不改整机显卡注册表。"
+      content="异环光追解锁面板：异环光线追踪 / 全景光追一键解锁工具，基于 OptiScaler DXGI / Streamline GPU spoof，支持本机原配置、RTX 4090、RTX 5080M 三档目标，支持备份恢复，不改整机显卡注册表。"
     />
     <meta
       name="keywords"
-      content="异环光追解锁,异环光线追踪一键,异环全景光追,异环光追开启,异环RTX5060开光追,异环显卡伪装,异环OptiScaler,异环RTX4090 spoof,NTE ray tracing unlock,Neverness To Everness ray tracing,Ananta path tracing,OptiScaler DXGI spoof"
+      content="异环光追解锁,异环光线追踪一键,异环全景光追,异环光追开启,异环RTX5060开光追,异环显卡伪装,异环OptiScaler,异环RTX4090 spoof,异环RTX5080M spoof,NTE ray tracing unlock,Neverness To Everness ray tracing,Ananta path tracing,OptiScaler DXGI spoof"
     />
     <meta property="og:title" content="异环光追解锁面板 / NTE Ray Tracing Panel" />
-    <meta property="og:description" content="只让 HTGame.exe 看到 RTX 4090，解锁异环光线追踪 / 全景光追选项；默认不改整机显卡注册表。" />
+    <meta property="og:description" content="只让 HTGame.exe 看到选定目标显卡，解锁异环光线追踪 / 全景光追选项；默认不改整机显卡注册表。" />
     <title>异环光追解锁面板 / NTE Ray Tracing Panel</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -53,7 +53,7 @@
             <p class="eyebrow">DXGI / Streamline GPU Spoof</p>
             <h2>异环光线追踪 / 全景光追一键解锁。</h2>
             <p class="hero-copy">
-              只让 <code>HTGame.exe</code> 看到 RTX 4090，不改整机显卡注册表。面板会安装本地 OptiScaler 代理，每次安装前生成 manifest 备份，可一键恢复。
+              只让 <code>HTGame.exe</code> 看到你选择的目标显卡，不改整机显卡注册表。支持本机原配置、RTX 4090、RTX 5080M 三档，每次安装前生成 manifest 备份，可一键恢复。
             </p>
             <div class="flow-strip" aria-label="功能流程">
               <div><b>01</b><span>选择游戏</span></div>
@@ -88,7 +88,7 @@
           <h3>中文发布名：异环光追解锁面板</h3>
           <p>
             推荐发布标题：<b>异环光追解锁面板：异环光线追踪 / 全景光追一键解锁工具</b>。
-            关键词覆盖异环光追、异环全景光追、RTX 5060 开光追、OptiScaler、RTX 4090 spoof。
+            关键词覆盖异环光追、异环全景光追、RTX 5060 开光追、OptiScaler、RTX 4090 spoof、RTX 5080M spoof。
           </p>
         </section>
 
@@ -138,7 +138,7 @@
               <code>winmm.dll</code>。
             </p>
             <div class="setting-list">
-              <div><span>默认目标</span><strong>RTX 4090</strong></div>
+              <div><span>可选目标</span><strong>本机 / 4090 / 5080M</strong></div>
               <div><span>默认入口</span><strong>winmm.dll</strong></div>
               <div><span>默认范围</span><strong>仅 Win64</strong></div>
             </div>
@@ -154,7 +154,36 @@
                 <p class="eyebrow">04</p>
                 <h3>光追解锁</h3>
               </div>
-              <span class="pill hot">RTX 4090 spoof</span>
+              <span id="profileBadge" class="pill hot">目标显卡</span>
+            </div>
+            <div class="profile-panel">
+              <div class="section-title">
+                <span>目标显卡</span>
+                <small>安装时写入 OptiScaler.ini</small>
+              </div>
+              <div id="profileGrid" class="profile-grid" aria-label="选择 GPU spoof 目标">
+                <label class="profile-option">
+                  <input type="radio" name="profile" value="local" />
+                  <span>
+                    <strong>本机原配置</strong>
+                    <small>读取当前 NVIDIA 显卡</small>
+                  </span>
+                </label>
+                <label class="profile-option">
+                  <input type="radio" name="profile" value="rtx4090" />
+                  <span>
+                    <strong>RTX 4090</strong>
+                    <small>原先验证成功目标</small>
+                  </span>
+                </label>
+                <label class="profile-option">
+                  <input type="radio" name="profile" value="rtx5080m" checked />
+                  <span>
+                    <strong>RTX 5080M</strong>
+                    <small>移动端 50 系目标</small>
+                  </span>
+                </label>
+              </div>
             </div>
             <div class="mode-box">
               <label>
@@ -225,7 +254,7 @@
           <div class="explain-grid">
             <div>
               <h4>成功原理</h4>
-              <p>游戏通过 GPU 型号白名单隐藏光追选项。OptiScaler 在游戏进程内改写 DXGI/Streamline 返回的 GPU 信息，让它看到 RTX 4090。</p>
+              <p>游戏通过 GPU 型号白名单隐藏光追选项。OptiScaler 在游戏进程内改写 DXGI/Streamline 返回的 GPU 信息，让它看到你选择的本机、4090 或 5080M profile。</p>
             </div>
             <div>
               <h4>和注册表改名的区别</h4>
@@ -250,7 +279,7 @@
         </section>
 
         <footer class="footer">
-          <span>异环光追解锁面板 / NTE Ray Tracing Panel <b id="versionText">0.1.5</b></span>
+          <span>异环光追解锁面板 / NTE Ray Tracing Panel <b id="versionText">0.1.6</b></span>
           <button id="shutdownBtn" class="ghost" type="button">退出工具</button>
         </footer>
       </section>

@@ -4,20 +4,28 @@
 
 当前机器是 `NVIDIA GeForce RTX 5060 Laptop GPU`。使用 OptiScaler 的 DXGI spoof 后，《异环》内光线追踪选项可以打开。因此本项目把这个已验证链路做成面板，而不是继续走全局注册表改名。
 
+## 目标显卡 Profile
+
+安装时先选择目标显卡：
+
+- 本机原配置：读取当前 NVIDIA 显卡名称和 DeviceId，适合回到本机识别。
+- RTX 4090：`NVIDIA GeForce RTX 4090` / `0x2684`。
+- RTX 5080M：`NVIDIA GeForce RTX 5080 Laptop GPU` / `0x2C59`。
+
 ## 默认 DXGI 模式
 
-默认安装会生成如下关键配置：
+默认 DXGI 模式会生成如下关键配置，其中 `SpoofedGPUName`、`SpoofedDeviceId` 和 `DxgiVRAM` 由所选 profile 决定：
 
 ```ini
 TargetProcessName=HTGame.exe
-SpoofedGPUName=NVIDIA GeForce RTX 4090
+SpoofedGPUName=<所选 profile 名称>
 SpoofedVendorId=0x10de
-SpoofedDeviceId=0x2684
+SpoofedDeviceId=<所选 profile DeviceId>
 TargetVendorId=0x10de
 TargetDeviceId=<自动检测到的本机 NVIDIA DeviceId>
 StreamlineSpoofing=true
 Dxgi=true
-DxgiVRAM=16
+DxgiVRAM=<所选 profile VRAM 或 auto>
 Registry=false
 User32=false
 UseFakenvapi=false

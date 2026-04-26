@@ -483,6 +483,73 @@ button.primary {
   margin: 16px 0;
 }
 
+.profile-panel {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-title span {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.section-title small {
+  color: var(--muted);
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.profile-option {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  min-height: 92px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: color-mix(in oklab, var(--panel-solid), transparent 24%);
+  transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+}
+
+.profile-option:has(input:checked) {
+  border-color: color-mix(in oklab, var(--accent), var(--line) 24%);
+  background:
+    linear-gradient(145deg, color-mix(in oklab, var(--accent), transparent 84%), transparent),
+    color-mix(in oklab, var(--panel-solid), transparent 12%);
+  transform: translateY(-1px);
+}
+
+.profile-option input {
+  margin-top: 4px;
+  accent-color: var(--accent);
+}
+
+.profile-option strong,
+.profile-option small {
+  display: block;
+}
+
+.profile-option small {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
 .mode-box {
   display: grid;
   gap: 10px;
@@ -626,6 +693,7 @@ button.primary {
   .hero,
   .flow-strip,
   .grid.two,
+  .profile-grid,
   .explain-grid {
     grid-template-columns: 1fr;
   }

@@ -1,8 +1,8 @@
 # NTE Ray Tracing Panel / 异环光追解锁面板
 
-Search keywords: Neverness To Everness ray tracing unlock, NTE ray tracing panel, Ananta ray tracing unlock, NTE RTX 4090 spoof, NTE OptiScaler, NTE path tracing, NTE full ray tracing, 异环光追解锁, 异环全景光追, 异环 RTX 5060 开光追.
+Search keywords: Neverness To Everness ray tracing unlock, NTE ray tracing panel, Ananta ray tracing unlock, NTE RTX 4090 spoof, NTE RTX 5080M spoof, NTE OptiScaler, NTE path tracing, NTE full ray tracing, 异环光追解锁, 异环全景光追, 异环 RTX 5060 开光追.
 
-`NTE Ray Tracing Panel` is a local WebUI for the verified Neverness To Everness / Ananta ray tracing unlock workflow. It wraps OptiScaler GPU spoofing with path detection, install, manifest backup, restore, logs, and release-ready documentation.
+`NTE Ray Tracing Panel` is a local WebUI for the verified Neverness To Everness / Ananta ray tracing unlock workflow. It wraps OptiScaler GPU spoofing with path detection, selectable GPU profiles, install, manifest backup, restore, logs, and release-ready documentation.
 
 Local URL:
 
@@ -26,13 +26,16 @@ Recommended reading order:
 
 Some NTE test builds hide ray tracing options based on a GPU model allowlist. The verified workaround is to make `HTGame.exe` see a higher whitelisted NVIDIA GPU through OptiScaler DXGI / Streamline spoofing.
 
-Default profile:
+Selectable profiles:
 
 ```ini
-TargetProcessName=HTGame.exe
+Local original profile = detected NVIDIA GPU name and DeviceId
 SpoofedGPUName=NVIDIA GeForce RTX 4090
-SpoofedVendorId=0x10de
 SpoofedDeviceId=0x2684
+SpoofedGPUName=NVIDIA GeForce RTX 5080 Laptop GPU
+SpoofedDeviceId=0x2C59
+TargetProcessName=HTGame.exe
+SpoofedVendorId=0x10de
 StreamlineSpoofing=true
 Dxgi=true
 Registry=false
@@ -53,8 +56,9 @@ User32=false
 2. Select the NTE install directory, the `Win64` directory, or `HTGame.exe`.
 3. Click "Download / Prepare OptiScaler".
 4. Close NTE and the launcher.
-5. Click "Backup and Install Ray Tracing Unlock".
-6. Launch the game and check the ray tracing options.
+5. Select the target GPU profile: local original, RTX 4090, or RTX 5080M.
+6. Click "Backup and Install Ray Tracing Unlock".
+7. Launch the game and check the ray tracing options.
 
 ## Core Projects and Thanks
 

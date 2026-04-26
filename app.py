@@ -20,7 +20,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
 
-APP_VERSION = "0.1.5"
+APP_VERSION = "0.1.6"
 APP_CN_NAME = "异环光追解锁面板"
 APP_FULL_CN_NAME = "异环光线追踪 / 全景光追一键解锁工具"
 APP_EN_NAME = "NTE Ray Tracing Panel"
@@ -33,6 +33,7 @@ APP_SEARCH_KEYWORDS = [
     "异环显卡伪装",
     "异环 OptiScaler",
     "异环 RTX 4090 spoof",
+    "异环 RTX 5080M spoof",
     "NTE ray tracing unlock",
     "Neverness To Everness ray tracing",
     "Ananta path tracing",
@@ -57,13 +58,37 @@ MANAGED_FILES = (
 MANAGED_DIRS = ("OptiScaler",)
 BACKUP_DIR_NAME = "_nte_rt_backups"
 
-PROFILE_RTX_4090 = {
-    "label": "RTX 4090",
-    "gpuName": "NVIDIA GeForce RTX 4090",
+FALLBACK_LOCAL_PROFILE = {
+    "id": "local",
+    "label": "本机原配置",
+    "gpuName": "NVIDIA GeForce RTX 5060 Laptop GPU",
     "vendorId": "0x10de",
-    "deviceId": "0x2684",
-    "vramGb": "16",
+    "deviceId": "0x2d19",
+    "vramGb": "auto",
+    "description": "使用当前机器检测到的 NVIDIA 显卡名称和 DeviceId，适合回到本机识别。",
 }
+
+STATIC_PROFILES = {
+    "rtx4090": {
+        "id": "rtx4090",
+        "label": "RTX 4090",
+        "gpuName": "NVIDIA GeForce RTX 4090",
+        "vendorId": "0x10de",
+        "deviceId": "0x2684",
+        "vramGb": "16",
+        "description": "原先验证成功的白名单目标，桌面 RTX 4090 识别。",
+    },
+    "rtx5080m": {
+        "id": "rtx5080m",
+        "label": "RTX 5080M",
+        "gpuName": "NVIDIA GeForce RTX 5080 Laptop GPU",
+        "vendorId": "0x10de",
+        "deviceId": "0x2C59",
+        "vramGb": "16",
+        "description": "移动端 RTX 5080 Laptop GPU 识别，适合继续测试 50 系白名单。",
+    },
+}
+DEFAULT_PROFILE_ID = "rtx5080m"
 
 
 class AppError(Exception):
@@ -199,6 +224,33 @@ def get_nvidia_adapters() -> list[dict]:
         item["Registry"] = read_device_registry(pnp)
         rows.append(item)
     return rows
+
+
+def local_profile_from_adapter(adapters: list[dict] | None = None) -> dict:
+    profile = dict(FALLBACK_LOCAL_PROFILE)
+    adapter = adapters[0] if adapters else None
+    if adapter:
+        profile["gpuName"] = adapter.get("Name") or profile["gpuName"]
+        profile["deviceId"] = adapter.get("DeviceIdHex") or profile["deviceId"]
+        profile["description"] = f"当前检测到的本机显卡：{profile['gpuName']} / {profile['deviceId']}。"
+    return profile
+
+
+def spoof_profiles(adapters: list[dict] | None = None) -> list[dict]:
+    return [
+        local_profile_from_adapter(adapters),
+        dict(STATIC_PROFILES["rtx4090"]),
+        dict(STATIC_PROFILES["rtx5080m"]),
+    ]
+
+
+def resolve_profile(profile_id: str | None, adapters: list[dict] | None = None) -> dict:
+    selected = (profile_id or DEFAULT_PROFILE_ID).strip().lower()
+    if selected == "local":
+        return local_profile_from_adapter(adapters)
+    if selected in STATIC_PROFILES:
+        return dict(STATIC_PROFILES[selected])
+    raise AppError("目标显卡配置无效。")
 
 
 def read_device_registry(pnp_device_id: str) -> dict:
@@ -536,8 +588,7 @@ def set_ini_value(lines: list[str], key: str, value: str) -> list[str]:
     return out
 
 
-def build_optiscaler_config(template: Path, *, mode: str, target_device_id: str | None) -> str:
-    profile = PROFILE_RTX_4090
+def build_optiscaler_config(template: Path, *, mode: str, target_device_id: str | None, profile: dict) -> str:
     lines = template.read_text(encoding="utf-8", errors="replace").splitlines()
     values = {
         "SpoofedVendorId": profile["vendorId"],
@@ -585,7 +636,14 @@ def copy_optiscaler_payload(stage: dict, game_dir: Path) -> None:
     shutil.copy2(ini, opt_dir / "_source_OptiScaler.ini")
 
 
-def install_spoof(path_value: str, *, mode: str = "dxgi", close_game: bool = False, force_download: bool = False) -> dict:
+def install_spoof(
+    path_value: str,
+    *,
+    mode: str = "dxgi",
+    profile_id: str | None = None,
+    close_game: bool = False,
+    force_download: bool = False,
+) -> dict:
     mode = mode.lower()
     if mode not in {"dxgi", "full"}:
         raise AppError("模式无效。")
@@ -599,6 +657,7 @@ def install_spoof(path_value: str, *, mode: str = "dxgi", close_game: bool = Fal
     stage = ensure_optiscaler(force_download)
     adapters = get_nvidia_adapters()
     target_device_id = adapters[0].get("DeviceIdHex") if adapters else None
+    profile = resolve_profile(profile_id, adapters)
 
     backup_dir = win64 / BACKUP_DIR_NAME / now_id()
     backup_dir.mkdir(parents=True, exist_ok=True)
@@ -607,7 +666,7 @@ def install_spoof(path_value: str, *, mode: str = "dxgi", close_game: bool = Fal
         "tool": "nte-ray-tracing-panel",
         "version": APP_VERSION,
         "mode": mode,
-        "profile": PROFILE_RTX_4090,
+        "profile": profile,
         "win64": str(win64),
         "stage": stage,
         "targetDeviceId": target_device_id,
@@ -623,9 +682,9 @@ def install_spoof(path_value: str, *, mode: str = "dxgi", close_game: bool = Fal
     copy_optiscaler_payload(stage, win64)
     manifest["operations"].append("写入 winmm.dll OptiScaler 代理")
     manifest["operations"].append("写入 OptiScaler 依赖目录")
-    config = build_optiscaler_config(Path(stage["ini"]), mode=mode, target_device_id=target_device_id)
+    config = build_optiscaler_config(Path(stage["ini"]), mode=mode, target_device_id=target_device_id, profile=profile)
     (win64 / "OptiScaler.ini").write_text(config, encoding="ascii", errors="ignore")
-    manifest["operations"].append("写入 OptiScaler.ini GPU spoof 配置")
+    manifest["operations"].append(f"写入 OptiScaler.ini GPU spoof 配置: {profile['label']}")
 
     (backup_dir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     return {
@@ -633,6 +692,7 @@ def install_spoof(path_value: str, *, mode: str = "dxgi", close_game: bool = Fal
         "message": "已备份并安装光追解锁配置。",
         "backup": str(backup_dir),
         "mode": mode,
+        "profile": profile,
         "targetDeviceId": target_device_id,
         "detected": detect_game(path_value),
     }
@@ -669,6 +729,7 @@ def restore_backup(path_value: str, backup_id: str | None, *, close_game: bool =
 def api_state(path_value: str | None = None) -> dict:
     common = None
     selected = None
+    adapters = get_nvidia_adapters()
     if path_value:
         try:
             selected = detect_game(path_value)
@@ -686,7 +747,9 @@ def api_state(path_value: str | None = None) -> dict:
         "toolsDir": str(TOOLS_DIR),
         "processes": running_processes(),
         "procmon": procmon_filter_state(),
-        "nvidia": get_nvidia_adapters(),
+        "nvidia": adapters,
+        "profiles": spoof_profiles(adapters),
+        "defaultProfile": DEFAULT_PROFILE_ID,
         "optiscaler": find_optiscaler_stage(),
         "commonDetected": common,
         "selectedDetected": selected,
@@ -776,6 +839,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(install_spoof(
                     data.get("path"),
                     mode=data.get("mode") or "dxgi",
+                    profile_id=data.get("profile") or data.get("profileId"),
                     close_game=bool(data.get("closeGame")),
                     force_download=bool(data.get("forceDownload")),
                 ))

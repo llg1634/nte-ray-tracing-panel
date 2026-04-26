@@ -4,6 +4,8 @@ const state = {
   path: "",
   detected: null,
   lastState: null,
+  profiles: [],
+  defaultProfile: "rtx5080m",
 };
 
 function toast(message, isError = false) {
@@ -49,10 +51,56 @@ function currentMode() {
   return document.querySelector("input[name='mode']:checked")?.value || "dxgi";
 }
 
+function currentProfile() {
+  return document.querySelector("input[name='profile']:checked")?.value || state.defaultProfile || "rtx5080m";
+}
+
 function processText(processes) {
   if (!processes || processes.length === 0) return "未运行";
   const names = [...new Set(processes.map((item) => item.ProcessName || item.processName).filter(Boolean))];
   return names.join(", ");
+}
+
+function findProfileByInstall(install) {
+  const ini = install?.optScalerIni || {};
+  const deviceId = (ini.SpoofedDeviceId || "").toLowerCase();
+  const gpuName = (ini.SpoofedGPUName || "").toLowerCase();
+  return state.profiles.find((profile) => (
+    (profile.deviceId || "").toLowerCase() === deviceId ||
+    (profile.gpuName || "").toLowerCase() === gpuName
+  ));
+}
+
+function setProfileSelection(profileId) {
+  const input = document.querySelector(`input[name='profile'][value='${profileId}']`);
+  if (input) input.checked = true;
+  const selected = state.profiles.find((profile) => profile.id === currentProfile());
+  $("#profileBadge").textContent = selected ? selected.label : "目标显卡";
+}
+
+function renderProfiles(profiles, defaultProfile) {
+  if (!Array.isArray(profiles) || profiles.length === 0) return;
+  const selectedBefore = currentProfile();
+  state.profiles = profiles;
+  state.defaultProfile = defaultProfile || state.defaultProfile;
+  const selectedId = profiles.some((profile) => profile.id === selectedBefore) ? selectedBefore : state.defaultProfile;
+  const grid = $("#profileGrid");
+  grid.innerHTML = "";
+  profiles.forEach((profile) => {
+    const label = document.createElement("label");
+    label.className = "profile-option";
+    const checked = profile.id === selectedId ? "checked" : "";
+    label.innerHTML = `
+      <input type="radio" name="profile" value="${profile.id}" ${checked} />
+      <span>
+        <strong>${profile.label}</strong>
+        <small>${profile.gpuName} / ${profile.deviceId}</small>
+      </span>
+    `;
+    label.querySelector("input").addEventListener("change", () => setProfileSelection(profile.id));
+    grid.appendChild(label);
+  });
+  setProfileSelection(document.querySelector("input[name='profile']:checked")?.value || selectedId);
 }
 
 function updateHero(install) {
@@ -70,6 +118,8 @@ function updateDetected(detected) {
   $("#pathHint").textContent = `HTGame.exe: ${detected.exe}`;
   updateHero(detected.install);
   renderInstallState(detected.install);
+  const installedProfile = findProfileByInstall(detected.install);
+  if (installedProfile) setProfileSelection(installedProfile.id);
   renderBackups(detected.backups || []);
 }
 
@@ -109,11 +159,16 @@ function renderInstallState(install) {
   ];
   const ini = install.optScalerIni || {};
   Object.keys(ini).sort().forEach((key) => lines.push(`${key}=${ini[key]}`));
+  const matched = findProfileByInstall(install);
+  if (matched) {
+    lines.splice(4, 0, `matchedProfile: ${matched.label}`);
+  }
   $("#installState").textContent = lines.join("\n");
 }
 
 function updateStateView(data) {
   state.lastState = data;
+  renderProfiles(data.profiles || [], data.defaultProfile);
   $("#versionText").textContent = data.version || "0.1.0";
   if (data.name) document.title = `${data.name} / ${data.englishName || "NTE Ray Tracing Panel"}`;
   const gpu = data.nvidia?.[0];
@@ -197,6 +252,7 @@ async function installSpoof() {
       body: JSON.stringify({
         path: $("#gamePath").value.trim(),
         mode: currentMode(),
+        profile: currentProfile(),
         closeGame: $("#closeGame").checked,
       }),
     });

@@ -1,8 +1,8 @@
 # 异环光追解锁面板：异环光线追踪 / 全景光追一键解锁工具
 
-搜索关键词：异环光追解锁、异环光线追踪一键、异环全景光追解锁、异环光追开启、异环 RTX 5060 开光追、异环显卡伪装、异环 OptiScaler、异环 RTX 4090 spoof、NTE Ray Tracing Panel、Neverness To Everness ray tracing unlock、Ananta path tracing、OptiScaler DXGI spoof。
+搜索关键词：异环光追解锁、异环光线追踪一键、异环全景光追解锁、异环光追开启、异环 RTX 5060 开光追、异环显卡伪装、异环 OptiScaler、异环 RTX 4090 spoof、异环 RTX 5080M spoof、NTE Ray Tracing Panel、Neverness To Everness ray tracing unlock、Ananta path tracing、OptiScaler DXGI spoof。
 
-`异环光追解锁面板 / NTE Ray Tracing Panel` 是异环（Neverness To Everness / Ananta）光线追踪 / 全景光追解锁本地 WebUI。它把当前已验证成功的 OptiScaler `winmm.dll + OptiScaler.ini` GPU spoof 流程做成可检测、可备份、可恢复、可解释的一键工具。
+`异环光追解锁面板 / NTE Ray Tracing Panel` 是异环（Neverness To Everness / Ananta）光线追踪 / 全景光追解锁本地 WebUI。它把当前已验证成功的 OptiScaler `winmm.dll + OptiScaler.ini` GPU spoof 流程做成可检测、可选择目标显卡、可备份、可恢复、可解释的一键工具。
 
 English README: [README.en.md](README.en.md)
 
@@ -16,16 +16,16 @@ http://127.0.0.1:22642
 
 ## 搜索关键词 / Search Keywords
 
-异环光追解锁，异环光线追踪一键，异环光追一键，异环全景光追，异环路径追踪，异环 RTX 5060 开光追，异环 RTX 4060 开光追，异环 4060 开光追，异环 OptiScaler，异环 RTX 4090 spoof，异环显卡伪装，异环 winmm.dll，异环 HTGame.exe，异环光追注册表替代方案。
+异环光追解锁，异环光线追踪一键，异环光追一键，异环全景光追，异环路径追踪，异环 RTX 5060 开光追，异环 RTX 4060 开光追，异环 4060 开光追，异环 OptiScaler，异环 RTX 4090 spoof，异环 RTX 5080M spoof，异环显卡伪装，异环 winmm.dll，异环 HTGame.exe，异环光追注册表替代方案。
 
-Neverness To Everness ray tracing unlock, NTE ray tracing panel, NTE full ray tracing, NTE path tracing, Ananta ray tracing unlock, NTE RTX 4090 spoof, NTE OptiScaler, DXGI spoof, Streamline spoof, HTGame.exe ray tracing.
+Neverness To Everness ray tracing unlock, NTE ray tracing panel, NTE full ray tracing, NTE path tracing, Ananta ray tracing unlock, NTE RTX 4090 spoof, NTE RTX 5080M spoof, NTE OptiScaler, DXGI spoof, Streamline spoof, HTGame.exe ray tracing.
 
 ## 项目定位
 
 这个项目的重点不是“通用 Mod 管理器”，而是把异环这个具体场景里的光追解锁路径做成可复用流程：
 
 - 异环当前测试版本会按 GPU 型号白名单隐藏光线追踪选项。
-- 当前机器已验证：通过 OptiScaler DXGI/Streamline spoof 成 RTX 4090 后，游戏内光线追踪选项可打开。
+- 当前机器已验证：通过 OptiScaler DXGI/Streamline spoof 成白名单目标后，游戏内光线追踪选项可打开。
 - 直接改系统显卡注册表是整机级影响，不适合主力开发机。
 - 本工具默认只写游戏 `Win64` 目录内的本地代理文件，并提供 manifest 备份恢复。
 
@@ -33,7 +33,7 @@ Neverness To Everness ray tracing unlock, NTE ray tracing panel, NTE full ray tr
 
 部分 RTX 50/40/30 系显卡实际支持光追，但《异环》测试版本会按显卡型号白名单隐藏“光线追踪 / 全景光追”选项。手动改 Windows 显卡注册表是整机级影响，不适合主力开发机。
 
-本工具默认使用 OptiScaler 的 DXGI/Streamline GPU spoof，把 `HTGame.exe` 看到的 GPU 名称伪装为 `NVIDIA GeForce RTX 4090`，从而解锁游戏里的光追选项。这个方法已经在当前机器上验证：安装后游戏内光线追踪选项可打开。
+本工具默认使用 OptiScaler 的 DXGI/Streamline GPU spoof，把 `HTGame.exe` 看到的 GPU 名称伪装为所选目标显卡，从而解锁游戏里的光追选项。当前 WebUI 提供三档：本机原配置、`NVIDIA GeForce RTX 4090`、`NVIDIA GeForce RTX 5080 Laptop GPU`。这个方法已经在当前机器上验证：安装后游戏内光线追踪选项可打开。
 
 ## 文档导航
 
@@ -63,9 +63,10 @@ Neverness To Everness ray tracing unlock, NTE ray tracing panel, NTE full ray tr
 1. 运行 `run.bat`，或双击发布版 `NTERayTracingPanel.exe`。
 2. 页面打开后选择《异环》安装根目录，或直接选择 `Client\WindowsNoEditor\HT\Binaries\Win64`。
 3. 点击“下载/准备 OptiScaler”。
-4. 确认游戏和启动器已关闭。
-5. 点击“备份并安装光追解锁”。
-6. 启动游戏，在画质设置里检查光线追踪选项。
+4. 选择目标显卡 profile：本机原配置、RTX 4090 或 RTX 5080M。
+5. 确认游戏和启动器已关闭。
+6. 点击“备份并安装光追解锁”。
+7. 启动游戏，在画质设置里检查光线追踪选项。
 
 ## 运行与退出
 
@@ -96,12 +97,16 @@ python app.py --no-browser
 
 ## 原理
 
-OptiScaler 的 GPU spoof 能改写游戏进程通过 DXGI/Streamline 读取到的显卡描述、VendorId、DeviceId 和显存信息。本工具生成的默认配置：
+OptiScaler 的 GPU spoof 能改写游戏进程通过 DXGI/Streamline 读取到的显卡描述、VendorId、DeviceId 和显存信息。本工具会按 WebUI 选择生成配置。三档目标显卡：
+
+- 本机原配置：读取当前 NVIDIA 显卡名称和 DeviceId，适合回到本机识别。
+- RTX 4090：`SpoofedGPUName=NVIDIA GeForce RTX 4090`，`SpoofedDeviceId=0x2684`。
+- RTX 5080M：`SpoofedGPUName=NVIDIA GeForce RTX 5080 Laptop GPU`，`SpoofedDeviceId=0x2C59`。
+
+所有 profile 都会保留这些默认边界：
 
 - `TargetProcessName=HTGame.exe`
-- `SpoofedGPUName=NVIDIA GeForce RTX 4090`
 - `SpoofedVendorId=0x10de`
-- `SpoofedDeviceId=0x2684`
 - `Dxgi=true`
 - `StreamlineSpoofing=true`
 - `Registry=false`

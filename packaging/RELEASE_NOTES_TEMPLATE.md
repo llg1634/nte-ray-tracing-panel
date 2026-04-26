@@ -1,6 +1,6 @@
 # 异环光追解锁面板 / NTE Ray Tracing Panel vX.Y.Z
 
-异环光线追踪 / 全景光追本地 WebUI。默认通过 OptiScaler DXGI/Streamline GPU spoof，让 `HTGame.exe` 看到 `NVIDIA GeForce RTX 4090`，从而解锁游戏内光追选项。
+异环光线追踪 / 全景光追本地 WebUI。通过 OptiScaler DXGI/Streamline GPU spoof，让 `HTGame.exe` 看到所选目标显卡，从而解锁游戏内光追选项。
 
 推荐发布标题：
 
@@ -11,7 +11,7 @@
 搜索关键词：
 
 ```text
-异环光追解锁，异环光线追踪一键，异环全景光追，异环 RTX 5060 开光追，异环显卡伪装，异环 OptiScaler，NTE ray tracing unlock，Ananta path tracing，RTX 4090 spoof
+异环光追解锁，异环光线追踪一键，异环全景光追，异环 RTX 5060 开光追，异环显卡伪装，异环 OptiScaler，NTE ray tracing unlock，Ananta path tracing，RTX 4090 spoof，RTX 5080M spoof
 ```
 
 ## Highlights
@@ -19,7 +19,8 @@
 - 本机 WebUI：`http://127.0.0.1:22642`
 - 自动检测异环 `HTGame.exe`
 - 一键准备 OptiScaler
-- 一键备份并安装 RTX 4090 spoof
+- 一键备份并安装所选目标显卡 spoof
+- 三档目标显卡：本机原配置、RTX 4090、RTX 5080M
 - Manifest 备份恢复
 - 深色/浅色 Mac 设置风界面
 
