@@ -1,8 +1,8 @@
 # 异环光追解锁面板：异环光线追踪 / 全景光追一键解锁工具
 
-搜索关键词：异环光追解锁、异环光线追踪一键、异环全景光追解锁、异环光追开启、异环 RTX 5060 开光追、异环显卡伪装、异环 OptiScaler、异环 RTX 4090 spoof、异环 RTX 5080M spoof、NTE Ray Tracing Panel、Neverness To Everness ray tracing unlock、Ananta path tracing、OptiScaler DXGI spoof。
+搜索关键词：异环光追解锁、异环光线追踪开启、异环全景光追开启、异环光追选项不显示、异环光追灰色、异环 RTX 5060 开光追、异环 RTX 4060 开光追、异环显卡伪装、异环不改注册表光追、异环 winmm.dll 光追、异环 HTGame.exe 光追、异环 OptiScaler、异环 RTX 4090 spoof、异环 RTX 5080M spoof、NTE Ray Tracing Panel、Neverness To Everness ray tracing unlock、NTE ray tracing option missing、Ananta ray tracing unlock、OptiScaler DXGI spoof。
 
-`异环光追解锁面板 / NTE Ray Tracing Panel` 是异环（Neverness To Everness / Ananta）光线追踪 / 全景光追解锁本地 WebUI。它把当前已验证成功的 OptiScaler `winmm.dll + OptiScaler.ini` GPU spoof 流程做成可检测、可选择目标显卡、可备份、可恢复、可解释的一键工具。
+`异环光追解锁面板 / NTE Ray Tracing Panel` 是用于解决《异环》光追选项不显示、光线追踪 / 全景光追无法开启的本地 WebUI 工具。它把当前已验证成功的 OptiScaler `winmm.dll + OptiScaler.ini` GPU spoof 流程做成可检测、可选择目标显卡、可备份、可恢复、可解释的一键工具。
 
 English README: [README.en.md](README.en.md)
 
@@ -16,9 +16,9 @@ http://127.0.0.1:22642
 
 ## 搜索关键词 / Search Keywords
 
-异环光追解锁，异环光线追踪一键，异环光追一键，异环全景光追，异环路径追踪，异环 RTX 5060 开光追，异环 RTX 4060 开光追，异环 4060 开光追，异环 OptiScaler，异环 RTX 4090 spoof，异环 RTX 5080M spoof，异环显卡伪装，异环 winmm.dll，异环 HTGame.exe，异环光追注册表替代方案。
+异环光追解锁，异环光线追踪开启，异环全景光追开启，异环光追选项不显示，异环光追灰色，异环路径追踪，异环 RTX 5060 开光追，异环 RTX 4060 开光追，异环 4060 开光追，异环显卡伪装，异环不改注册表光追，异环注册表替代方案，异环 winmm.dll 光追，异环 HTGame.exe 光追，异环 OptiScaler，异环 DXGI spoof，异环 Streamline spoof，异环 RTX 4090 spoof，异环 RTX 5080M spoof。
 
-Neverness To Everness ray tracing unlock, NTE ray tracing panel, NTE full ray tracing, NTE path tracing, Ananta ray tracing unlock, NTE RTX 4090 spoof, NTE RTX 5080M spoof, NTE OptiScaler, DXGI spoof, Streamline spoof, HTGame.exe ray tracing.
+Neverness To Everness ray tracing unlock, Neverness To Everness path tracing unlock, NTE ray tracing unlock, NTE ray tracing panel, NTE full ray tracing unlock, NTE path tracing unlock, NTE ray tracing option missing, NTE ray tracing not showing, NTE GPU spoof, NTE RTX 4090 spoof, NTE RTX 5080M spoof, NTE OptiScaler, NTE winmm.dll, NTE HTGame.exe, DXGI spoof, Streamline spoof, Ananta ray tracing unlock, Ananta path tracing unlock.
 
 ## 项目定位
 

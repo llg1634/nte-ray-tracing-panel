@@ -26,17 +26,30 @@ APP_FULL_CN_NAME = "异环光线追踪 / 全景光追一键解锁工具"
 APP_EN_NAME = "NTE Ray Tracing Panel"
 APP_SEARCH_KEYWORDS = [
     "异环光追解锁",
-    "异环光线追踪一键",
+    "异环光线追踪开启",
     "异环全景光追",
+    "异环全景光追开启",
     "异环光追开启",
+    "异环光追选项不显示",
+    "异环光追灰色",
     "异环 RTX 5060 开光追",
+    "异环 RTX 4060 开光追",
     "异环显卡伪装",
+    "异环 不改注册表 光追",
+    "异环 winmm.dll 光追",
+    "异环 HTGame.exe 光追",
     "异环 OptiScaler",
     "异环 RTX 4090 spoof",
     "异环 RTX 5080M spoof",
     "NTE ray tracing unlock",
     "Neverness To Everness ray tracing",
+    "Neverness To Everness ray tracing unlock",
+    "NTE ray tracing option missing",
+    "NTE ray tracing not showing",
+    "NTE GPU spoof",
+    "NTE OptiScaler DXGI spoof",
     "Ananta path tracing",
+    "Ananta ray tracing unlock",
 ]
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 22642

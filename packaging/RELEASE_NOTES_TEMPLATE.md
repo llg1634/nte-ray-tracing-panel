@@ -11,7 +11,7 @@
 搜索关键词：
 
 ```text
-异环光追解锁，异环光线追踪一键，异环全景光追，异环 RTX 5060 开光追，异环显卡伪装，异环 OptiScaler，NTE ray tracing unlock，Ananta path tracing，RTX 4090 spoof，RTX 5080M spoof
+异环光追解锁，异环光线追踪开启，异环全景光追开启，异环光追选项不显示，异环光追灰色，异环 RTX 5060 开光追，异环 RTX 4060 开光追，异环显卡伪装，异环不改注册表光追，异环 winmm.dll 光追，异环 OptiScaler，NTE ray tracing unlock，NTE ray tracing option missing，NTE GPU spoof，Neverness To Everness ray tracing unlock，Ananta ray tracing unlock，RTX 4090 spoof，RTX 5080M spoof
 ```
 
 ## Highlights
