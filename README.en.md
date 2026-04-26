@@ -1,10 +1,10 @@
 # NTE Ray Tracing Panel / 异环光追解锁面板
 
-Search keywords: Neverness To Everness ray tracing unlock, Neverness To Everness path tracing unlock, NTE ray tracing unlock, NTE ray tracing option missing, NTE ray tracing not showing, NTE GPU spoof, NTE OptiScaler DXGI spoof, NTE winmm.dll, NTE HTGame.exe, Ananta ray tracing unlock, Ananta path tracing unlock, NTE RTX 4090 spoof, NTE RTX 5080M spoof, 异环光追解锁, 异环光追选项不显示, 异环全景光追开启, 异环 RTX 5060 开光追.
+Search keywords: NTE how to enable ray tracing, how to enable ray tracing in NTE, Neverness To Everness how to enable ray tracing, Neverness To Everness no ray tracing option, NTE no ray tracing option, NTE ray tracing option missing, NTE ray tracing not showing, NTE ray tracing fix, NTE ray tracing tool, NTE one-click ray tracing unlock, NTE one-click OptiScaler install, NTE OptiScaler setup, NTE winmm.dll installer, Ananta how to enable ray tracing, Ananta no ray tracing option, Ananta ray tracing unlock.
 
-`NTE Ray Tracing Panel` is a local WebUI tool for fixing hidden or missing ray tracing / path tracing options in Neverness To Everness / Ananta test builds. It wraps the verified OptiScaler `winmm.dll + OptiScaler.ini` GPU spoof workflow with path detection, selectable GPU profiles, install, manifest backup, restore, logs, and release-ready documentation.
+`NTE Ray Tracing Panel` is a one-click ray tracing tool for players searching how to enable ray tracing in Neverness To Everness / Ananta or why the ray tracing option is missing. It automatically prepares OptiScaler, installs the local `winmm.dll` proxy and `OptiScaler.ini`, lets you pick a GPU spoof profile, creates a manifest backup, and provides restore and logs.
 
-Chinese aliases for search: 异环光追解锁, 异环光线追踪开启, 异环全景光追开启, 异环光追选项不显示, 异环 RTX 5060 开光追, 异环 RTX 4060 开光追, 异环不改注册表光追, 异环 OptiScaler.
+Chinese aliases for search: 异环怎么开光追, 异环光追怎么开, 异环全景光追怎么开, 异环没有光追选项, 异环光追打不开, 异环光追开不了, 异环 RTX 5060 怎么开光追, 异环 RTX 4060 怎么开光追, 异环光追一键开启, 异环光追一键安装, 异环光追工具.
 
 Local URL:
 

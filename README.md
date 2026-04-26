@@ -1,8 +1,8 @@
-# 异环光追解锁面板：异环光线追踪 / 全景光追一键解锁工具
+# 异环怎么开光追：异环光追一键开启 / 一键部署工具
 
-搜索关键词：异环光追解锁、异环光线追踪开启、异环全景光追开启、异环光追选项不显示、异环光追灰色、异环 RTX 5060 开光追、异环 RTX 4060 开光追、异环显卡伪装、异环不改注册表光追、异环 winmm.dll 光追、异环 HTGame.exe 光追、异环 OptiScaler、异环 RTX 4090 spoof、异环 RTX 5080M spoof、NTE Ray Tracing Panel、Neverness To Everness ray tracing unlock、NTE ray tracing option missing、Ananta ray tracing unlock、OptiScaler DXGI spoof。
+搜索关键词：异环怎么开光追、异环光追怎么开、异环全景光追怎么开、异环没有光追选项、异环光追选项不显示、异环光追打不开、异环光追开不了、异环 5060 没有光追、异环 4060 没有光追、异环 RTX 5060 怎么开光追、异环 RTX 4060 怎么开光追、异环光追一键开启、异环光追一键安装、异环光追一键部署、异环开光追工具、异环光追补丁、异环 OptiScaler 一键安装、异环 winmm.dll 一键安装、异环不改注册表光追、NTE how to enable ray tracing、NTE no ray tracing option、Neverness To Everness how to enable ray tracing、NTE ray tracing fix、NTE one-click ray tracing unlock。
 
-`异环光追解锁面板 / NTE Ray Tracing Panel` 是用于解决《异环》光追选项不显示、光线追踪 / 全景光追无法开启的本地 WebUI 工具。它把当前已验证成功的 OptiScaler `winmm.dll + OptiScaler.ini` GPU spoof 流程做成可检测、可选择目标显卡、可备份、可恢复、可解释的一键工具。
+`异环光追一键部署面板 / NTE Ray Tracing Panel` 是给“异环怎么开光追”“为什么没有光追选项”这类问题准备的本地 WebUI 工具。它可以一键准备 OptiScaler、安装本地 `winmm.dll` 和 `OptiScaler.ini`，把当前已验证成功的 GPU spoof 流程做成自动写入、可选择目标显卡、可备份、可恢复的一键开启光追流程。
 
 English README: [README.en.md](README.en.md)
 
@@ -16,9 +16,9 @@ http://127.0.0.1:22642
 
 ## 搜索关键词 / Search Keywords
 
-异环光追解锁，异环光线追踪开启，异环全景光追开启，异环光追选项不显示，异环光追灰色，异环路径追踪，异环 RTX 5060 开光追，异环 RTX 4060 开光追，异环 4060 开光追，异环显卡伪装，异环不改注册表光追，异环注册表替代方案，异环 winmm.dll 光追，异环 HTGame.exe 光追，异环 OptiScaler，异环 DXGI spoof，异环 Streamline spoof，异环 RTX 4090 spoof，异环 RTX 5080M spoof。
+异环怎么开光追，异环光追怎么开，异环全景光追怎么开，异环光线追踪怎么开，异环没有光追选项，异环光追选项不显示，异环光追打不开，异环光追开不了，异环光追灰色，异环 RTX 5060 怎么开光追，异环 RTX 4060 怎么开光追，异环 5060 没有光追，异环 4060 没有光追，异环光追一键开启，异环光追一键安装，异环光追一键部署，异环开光追工具，异环光追工具，异环光追补丁，异环 OptiScaler 一键安装，异环 winmm.dll 一键安装，异环不改注册表光追。
 
-Neverness To Everness ray tracing unlock, Neverness To Everness path tracing unlock, NTE ray tracing unlock, NTE ray tracing panel, NTE full ray tracing unlock, NTE path tracing unlock, NTE ray tracing option missing, NTE ray tracing not showing, NTE GPU spoof, NTE RTX 4090 spoof, NTE RTX 5080M spoof, NTE OptiScaler, NTE winmm.dll, NTE HTGame.exe, DXGI spoof, Streamline spoof, Ananta ray tracing unlock, Ananta path tracing unlock.
+NTE how to enable ray tracing, how to enable ray tracing in NTE, Neverness To Everness how to enable ray tracing, Neverness To Everness no ray tracing option, NTE no ray tracing option, NTE ray tracing option missing, NTE ray tracing not showing, NTE ray tracing fix, NTE ray tracing tool, NTE one-click ray tracing unlock, NTE one-click OptiScaler install, NTE OptiScaler setup, NTE winmm.dll installer, Ananta how to enable ray tracing, Ananta no ray tracing option, Ananta ray tracing unlock.
 
 ## 项目定位
 
