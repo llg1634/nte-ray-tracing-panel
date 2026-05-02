@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="¿Cómo activar el ray tracing en Neverness To Everness? Esta WebUI local activa el ray tracing / iluminación global con un solo clic, solucionando la falta de opción de ray tracing. Instala automáticamente OptiScaler winmm.dll y OptiScaler.ini, con respaldo y restauración, sin modificar el registro de la GPU del sistema."
+    />
+    <meta
+      name="keywords"
+      content="NTE cómo activar ray tracing, cómo activar ray tracing en NTE, Neverness To Everness cómo activar ray tracing, Neverness To Everness no aparece opción ray tracing, NTE no hay opción ray tracing, opción ray tracing NTE no se muestra, NTE arreglo ray tracing, NTE herramienta ray tracing, NTE desbloqueo ray tracing un clic, NTE instalación OptiScaler un clic, Ananta cómo activar ray tracing, Ananta no aparece opción ray tracing"
+    />
+    <meta property="og:title" content="NTE Ray Tracing Panel — Desbloqueo de ray tracing con un clic" />
+    <meta property="og:description" content="Herramienta de un clic para activar ray tracing: instala automáticamente OptiScaler winmm.dll y OptiScaler.ini, soluciona la falta de opción de ray tracing en NTE; sin modificar el registro de la GPU del sistema." />
+    <title>NTE Ray Tracing Panel — Desbloqueo de ray tracing</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+
+    <main class="shell">
+      <aside class="sidebar">
+        <div class="traffic">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="brand">
+          <div class="brand-icon">RT</div>
+          <div>
+            <p class="eyebrow">Neverness To Everness</p>
+            <h1>NTE Ray Tracing Panel</h1>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="#overview" class="active">Resumen</a>
+          <a href="#install">Instalar</a>
+          <a href="#backup">Respaldos</a>
+          <a href="#logs">Registros</a>
+          <a href="#explain">Info</a>
+        </nav>
+        <div class="theme-card">
+          <span>Idioma</span>
+          <a href="./" style="text-decoration:none;font-size:13px;color:var(--text-secondary);">中文</a>
+          <span style="color:var(--text-secondary);margin:0 4px;">|</span>
+          <a href="./index.es.html" style="text-decoration:none;font-size:13px;color:var(--accent);font-weight:600;">ES</a>
+        </div>
+        <div class="theme-card">
+          <span>Apariencia</span>
+          <button id="themeToggle" class="theme-toggle" type="button">Claro</button>
+        </div>
+      </aside>
+
+      <section class="content">
+        <header class="hero" id="overview">
+          <div>
+            <p class="eyebrow">DXGI / Streamline GPU Spoof</p>
+            <h2>Activa el ray tracing / iluminación global con un solo clic.</h2>
+            <p class="hero-copy">
+              Solo <code>HTGame.exe</code> verá la GPU objetivo que elijas, sin modificar el registro del sistema. Tres perfiles: tu GPU real, RTX 4090 y RTX 5080M. Cada instalación genera un respaldo con manifest, restaurable con un clic.
+            </p>
+            <div class="flow-strip" aria-label="Flujo de uso">
+              <div><b>01</b><span>Seleccionar juego</span></div>
+              <div><b>02</b><span>Preparar OptiScaler</span></div>
+              <div><b>03</b><span>Instalar desbloqueo</span></div>
+              <div><b>04</b><span>Respaldos</span></div>
+              <div><b>05</b><span>Salir</span></div>
+            </div>
+          </div>
+          <div class="hero-meter">
+            <div class="ring">
+              <span id="statusGlyph">Pendiente</span>
+            </div>
+            <p id="statusLine">Obteniendo estado...</p>
+          </div>
+        </header>
+
+        <section class="notice-card">
+          <div>
+            <p class="eyebrow">WebUI Local</p>
+            <h3>La página del navegador no es la herramienta en sí.</h3>
+            <p>
+              Cerrar la pestaña del navegador <strong>no detiene</strong> <code>NTERayTracingPanel.exe</code> ni <code>python app.py</code>.
+              Para liberar el puerto y cerrar el backend, haz clic en "Salir" al final de la página.
+            </p>
+          </div>
+          <button id="shutdownBtnTop" class="secondary" type="button">Salir</button>
+        </section>
+
+        <section class="seo-card">
+          <p class="eyebrow">Search Ready Name</p>
+          <h3>También conocido como: NTE Desbloqueo de Ray Tracing</h3>
+          <p>
+            Título recomendado: <b>Cómo activar ray tracing en Neverness To Everness: herramienta de un clic</b>.
+            Palabras clave: NTE cómo activar ray tracing, NTE no hay opción ray tracing, NTE arreglo ray tracing, NTE desbloqueo ray tracing.
+          </p>
+        </section>
+
+        <section class="grid two">
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <p class="eyebrow">01</p>
+                <h3>Ruta del juego</h3>
+              </div>
+              <button id="browseBtn" type="button" class="secondary">Examinar</button>
+            </div>
+            <div class="field-row">
+              <input id="gamePath" type="text" placeholder="E:\Neverness To Everness o carpeta Win64" />
+              <button id="detectBtn" type="button">Detectar</button>
+            </div>
+            <div id="pathHint" class="hint">Elige la carpeta raíz del juego, la carpeta Win64 o HTGame.exe.</div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <p class="eyebrow">02</p>
+                <h3>Estado del sistema</h3>
+              </div>
+              <button id="refreshBtn" type="button" class="secondary">Actualizar</button>
+            </div>
+            <div class="status-list">
+              <div><span>GPU</span><strong id="gpuName">-</strong></div>
+              <div><span>PROCMON</span><strong id="procmonState">-</strong></div>
+              <div><span>Procesos activos</span><strong id="processState">-</strong></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="grid two" id="install">
+          <article class="card feature">
+            <div class="card-head">
+              <div>
+                <p class="eyebrow">03</p>
+                <h3>OptiScaler</h3>
+              </div>
+              <span id="optiBadge" class="pill">No preparado</span>
+            </div>
+            <p>
+              Descarga el release oficial en <code>tools/optiscaler</code>. Al instalar copia <code>OptiScaler.dll</code>
+              como proxy local <code>winmm.dll</code> en el directorio del juego.
+            </p>
+            <div class="setting-list">
+              <div><span>Perfiles</span><strong>Original / 4090 / 5080M</strong></div>
+              <div><span>Punto de entrada</span><strong>winmm.dll</strong></div>
+              <div><span>Alcance</span><strong>Solo carpeta Win64</strong></div>
+            </div>
+            <div class="actions">
+              <button id="downloadBtn" type="button">Descargar / Preparar OptiScaler</button>
+              <button id="forceDownloadBtn" type="button" class="secondary">Redescargar</button>
+            </div>
+          </article>
+
+          <article class="card feature">
+            <div class="card-head">
+              <div>
+                <p class="eyebrow">04</p>
+                <h3>Desbloqueo RT</h3>
+              </div>
+              <span id="profileBadge" class="pill hot">GPU objetivo</span>
+            </div>
+            <div class="profile-panel">
+              <div class="section-title">
+                <span>GPU objetivo</span>
+                <small>Se escribe en OptiScaler.ini al instalar</small>
+              </div>
+              <div id="profileGrid" class="profile-grid" aria-label="Seleccionar GPU a suplantar">
+                <label class="profile-option">
+                  <input type="radio" name="profile" value="local" />
+                  <span>
+                    <strong>Configuración original</strong>
+                    <small>Tu GPU NVIDIA actual</small>
+                  </span>
+                </label>
+                <label class="profile-option">
+                  <input type="radio" name="profile" value="rtx4090" />
+                  <span>
+                    <strong>RTX 4090</strong>
+                    <small>Perfil verificado (escritorio)</small>
+                  </span>
+                </label>
+                <label class="profile-option">
+                  <input type="radio" name="profile" value="rtx5080m" checked />
+                  <span>
+                    <strong>RTX 5080M</strong>
+                    <small>Perfil 50 series (portátil)</small>
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div class="mode-box">
+              <label>
+                <input type="radio" name="mode" value="dxgi" checked />
+                <span>Modo DXGI</span>
+                <small>Recomendado. No modifica el registro.</small>
+              </label>
+              <label>
+                <input type="radio" name="mode" value="full" />
+                <span>Modo Full (experimental)</span>
+                <small>Activa Registry / User32 / FakeNVAPI spoof.</small>
+              </label>
+            </div>
+            <label class="check-row">
+              <input id="closeGame" type="checkbox" />
+              <span>Cerrar el juego y el launcher automáticamente antes de instalar/restaurar</span>
+            </label>
+            <div class="danger-note">
+              El modo DXGI no modifica el registro de la GPU del sistema. El modo Full es solo una opción experimental.
+            </div>
+            <button id="installBtn" type="button" class="primary">Respaldar e instalar desbloqueo RT</button>
+          </article>
+        </section>
+
+        <section class="grid two" id="backup">
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <p class="eyebrow">05</p>
+                <h3>Respaldos</h3>
+              </div>
+              <span id="backupCount" class="pill">0 respaldos</span>
+            </div>
+            <select id="backupSelect"></select>
+            <div class="actions">
+              <button id="restoreBtn" type="button">Restaurar respaldo</button>
+              <button id="openBackupBtn" type="button" class="secondary" disabled>Ver ruta</button>
+            </div>
+            <p class="hint">La restauración sigue el manifest, no hace rollback masivo.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <p class="eyebrow">06</p>
+                <h3>Instalación actual</h3>
+              </div>
+              <span id="installBadge" class="pill">Desconocido</span>
+            </div>
+            <pre id="installState" class="mini-log">Esperando detección...</pre>
+          </article>
+        </section>
+
+        <section class="card" id="logs">
+          <div class="card-head">
+            <div>
+              <p class="eyebrow">07</p>
+              <h3>Registro de OptiScaler</h3>
+            </div>
+            <button id="logBtn" type="button" class="secondary">Actualizar registro</button>
+          </div>
+          <pre id="logView" class="log">Aún no se ha leído el registro.</pre>
+        </section>
+
+        <section class="card explain" id="explain">
+          <p class="eyebrow">08</p>
+          <h3>¿Qué hace este panel exactamente?</h3>
+          <div class="explain-grid">
+            <div>
+              <h4>Principio de funcionamiento</h4>
+              <p>El juego oculta las opciones de ray tracing según una lista blanca de modelos de GPU. OptiScaler modifica la información de GPU devuelta por DXGI/Streamline dentro del proceso del juego, haciéndole ver el perfil que hayas elegido (tu GPU real, RTX 4090 o RTX 5080M).</p>
+            </div>
+            <div>
+              <h4>Diferencia con modificar el registro</h4>
+              <p>Modificar el registro cambia el nombre de la GPU para todo el sistema. Esta herramienta solo reemplaza el DLL proxy local en el directorio del juego, sin tocar el registro de la GPU.</p>
+            </div>
+            <div>
+              <h4>Estrategia de respaldo</h4>
+              <p>Antes de instalar se guardan <code>winmm.dll</code>, <code>OptiScaler.ini</code>, <code>OptiScaler\</code> y archivos antiguos de DLSSTweaks, con un manifest detallado.</p>
+            </div>
+            <div>
+              <h4>Qué hacer si falla</h4>
+              <p>Si el juego no arranca, restaura el respaldo más reciente. Si la opción no aparece, revisa el registro para ver si OptiScaler se cargó correctamente.</p>
+            </div>
+            <div>
+              <h4>Proyectos principales</h4>
+              <p>
+                El núcleo de GPU spoof proviene de <a href="https://github.com/optiscaler/OptiScaler">OptiScaler</a>.
+                <a href="https://github.com/emoose/DLSSTweaks">DLSSTweaks</a> solo se menciona por compatibilidad con archivos antiguos; esta herramienta no usa su flujo de escalado DLSS.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <span>NTE Ray Tracing Panel <b id="versionText">0.1.6</b></span>
+          <button id="shutdownBtn" class="ghost" type="button">Salir</button>
+        </footer>
+      </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+    <script src="./app.es.js"></script>
+  </body>
+</html>
