@@ -20,7 +20,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
 
-APP_VERSION = "0.1.6"
+APP_VERSION = "0.1.7"
 APP_CN_NAME = "异环光追解锁面板"
 APP_FULL_CN_NAME = "异环光线追踪 / 全景光追一键解锁工具"
 APP_EN_NAME = "NTE Ray Tracing Panel"
@@ -119,7 +119,7 @@ STATIC_PROFILES = {
         "vendorId": "0x10de",
         "deviceId": "0x2684",
         "vramGb": "16",
-        "description": "原先验证成功的白名单目标，桌面 RTX 4090 识别。",
+        "description": "当前推荐且已实测可正常显示光线追踪选项的白名单目标。",
     },
     "rtx5080m": {
         "id": "rtx5080m",
@@ -128,10 +128,10 @@ STATIC_PROFILES = {
         "vendorId": "0x10de",
         "deviceId": "0x2C59",
         "vramGb": "16",
-        "description": "移动端 RTX 5080 Laptop GPU 识别，适合继续测试 50 系白名单。",
+        "description": "实验性目标，保留用于对照测试，不作为默认推荐。",
     },
 }
-DEFAULT_PROFILE_ID = "rtx5080m"
+DEFAULT_PROFILE_ID = "rtx4090"
 
 
 class AppError(Exception):

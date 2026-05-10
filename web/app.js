@@ -5,7 +5,7 @@ const state = {
   detected: null,
   lastState: null,
   profiles: [],
-  defaultProfile: "rtx5080m",
+  defaultProfile: "rtx4090",
 };
 
 function toast(message, isError = false) {
@@ -52,7 +52,7 @@ function currentMode() {
 }
 
 function currentProfile() {
-  return document.querySelector("input[name='profile']:checked")?.value || state.defaultProfile || "rtx5080m";
+  return document.querySelector("input[name='profile']:checked")?.value || state.defaultProfile || "rtx4090";
 }
 
 function processText(processes) {
@@ -93,7 +93,7 @@ function renderProfiles(profiles, defaultProfile) {
     label.innerHTML = `
       <input type="radio" name="profile" value="${profile.id}" ${checked} />
       <span>
-        <strong>${profile.label}</strong>
+        <strong>${profile.label}${profile.id === state.defaultProfile ? " · 推荐" : ""}</strong>
         <small>${profile.gpuName} / ${profile.deviceId}</small>
       </span>
     `;

@@ -2,15 +2,15 @@
 
 ## 已验证链路
 
-当前机器是 `NVIDIA GeForce RTX 5060 Laptop GPU`。使用 OptiScaler 的 DXGI spoof 后，《异环》内光线追踪选项可以打开。因此本项目把这个已验证链路做成面板，而不是继续走全局注册表改名。
+当前机器是 `NVIDIA GeForce RTX 5060 Laptop GPU`。使用 OptiScaler 的 DXGI spoof 后，《异环》内光线追踪选项可以打开。因此本项目把这个已验证链路做成面板，而不是继续走全局注册表改名。当前实测结论是：RTX 4090 profile 最推荐，RTX 5080M 仅保留作实验对照。
 
 ## 目标显卡 Profile
 
 安装时先选择目标显卡：
 
 - 本机原配置：读取当前 NVIDIA 显卡名称和 DeviceId，适合回到本机识别。
-- RTX 4090：`NVIDIA GeForce RTX 4090` / `0x2684`。
-- RTX 5080M：`NVIDIA GeForce RTX 5080 Laptop GPU` / `0x2C59`。
+- RTX 4090：`NVIDIA GeForce RTX 4090` / `0x2684`。当前默认推荐。
+- RTX 5080M：`NVIDIA GeForce RTX 5080 Laptop GPU` / `0x2C59`。实验性对照项，不推荐默认使用。
 
 ## 默认 DXGI 模式
 
@@ -69,6 +69,10 @@ HKLM\SYSTEM\CurrentControlSet\Enum\PCI\...\FriendlyName
 这会影响整机。开发工具、监控、脚本、许可证探测都可能看到假显卡名。
 
 本项目默认不写这些注册表项，只让游戏目录里的本地代理 DLL 在 `HTGame.exe` 中工作。
+
+## 画质预设说明
+
+实测中，光追选项通常需要默认画质预设在“极致”或以上才会显示。切到自定义低端配置后，设置界面里的光追选项可能消失，但已生效的实际效果可能保留。
 
 ## 备份恢复
 

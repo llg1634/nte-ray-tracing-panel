@@ -26,16 +26,16 @@ Recommended reading order:
 
 ## What It Does
 
-Some NTE test builds hide ray tracing options based on a GPU model allowlist. The verified workaround is to make `HTGame.exe` see a higher whitelisted NVIDIA GPU through OptiScaler DXGI / Streamline spoofing.
+Some NTE test builds hide ray tracing options based on a GPU model allowlist. The currently recommended workaround is to make `HTGame.exe` see an RTX 4090 through OptiScaler DXGI / Streamline spoofing.
 
-Selectable profiles:
+Selectable profiles. RTX 4090 is the default recommendation; RTX 5080M is kept only as an experimental comparison profile.
 
 ```ini
 Local original profile = detected NVIDIA GPU name and DeviceId
-SpoofedGPUName=NVIDIA GeForce RTX 4090
-SpoofedDeviceId=0x2684
-SpoofedGPUName=NVIDIA GeForce RTX 5080 Laptop GPU
-SpoofedDeviceId=0x2C59
+Recommended: SpoofedGPUName=NVIDIA GeForce RTX 4090
+Recommended: SpoofedDeviceId=0x2684
+Experimental: SpoofedGPUName=NVIDIA GeForce RTX 5080 Laptop GPU
+Experimental: SpoofedDeviceId=0x2C59
 TargetProcessName=HTGame.exe
 SpoofedVendorId=0x10de
 StreamlineSpoofing=true
@@ -58,9 +58,15 @@ User32=false
 2. Select the NTE install directory, the `Win64` directory, or `HTGame.exe`.
 3. Click "Download / Prepare OptiScaler".
 4. Close NTE and the launcher.
-5. Select the target GPU profile: local original, RTX 4090, or RTX 5080M.
+5. Select the target GPU profile. RTX 4090 is recommended by default; local original is for fallback, and RTX 5080M is experimental.
 6. Click "Backup and Install Ray Tracing Unlock".
-7. Launch the game and check the ray tracing options.
+7. Launch the game, set the graphics preset to Ultra/Extreme or higher first, then check the ray tracing options.
+
+## Tested Notes
+
+- RTX 4090 profile shows the full ray tracing option in current testing.
+- RTX 5080M currently only exposes "Panorama Ray Tracing" and "Off", so it is not recommended as the default.
+- The ray tracing option usually appears only when the stock graphics preset is set to Ultra/Extreme or higher. After switching to a lower custom preset, the UI option may disappear while the already-applied effect can remain active.
 
 ## Core Projects and Thanks
 

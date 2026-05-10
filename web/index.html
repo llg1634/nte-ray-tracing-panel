@@ -53,7 +53,7 @@
             <p class="eyebrow">DXGI / Streamline GPU Spoof</p>
             <h2>异环光线追踪 / 全景光追一键解锁。</h2>
             <p class="hero-copy">
-              只让 <code>HTGame.exe</code> 看到你选择的目标显卡，不改整机显卡注册表。支持本机原配置、RTX 4090、RTX 5080M 三档，每次安装前生成 manifest 备份，可一键恢复。
+              只让 <code>HTGame.exe</code> 看到你选择的目标显卡，不改整机显卡注册表。默认推荐 RTX 4090，本机原配置和 RTX 5080M 作为可选项保留，每次安装前生成 manifest 备份，可一键恢复。
             </p>
             <div class="flow-strip" aria-label="功能流程">
               <div><b>01</b><span>选择游戏</span></div>
@@ -138,7 +138,7 @@
               <code>winmm.dll</code>。
             </p>
             <div class="setting-list">
-              <div><span>可选目标</span><strong>本机 / 4090 / 5080M</strong></div>
+              <div><span>可选目标</span><strong>本机 / 4090(推荐) / 5080M(实验)</strong></div>
               <div><span>默认入口</span><strong>winmm.dll</strong></div>
               <div><span>默认范围</span><strong>仅 Win64</strong></div>
             </div>
@@ -170,17 +170,17 @@
                   </span>
                 </label>
                 <label class="profile-option">
-                  <input type="radio" name="profile" value="rtx4090" />
+                  <input type="radio" name="profile" value="rtx4090" checked />
                   <span>
                     <strong>RTX 4090</strong>
-                    <small>原先验证成功目标</small>
+                    <small>当前推荐，能显示完整光追选项</small>
                   </span>
                 </label>
                 <label class="profile-option">
-                  <input type="radio" name="profile" value="rtx5080m" checked />
+                  <input type="radio" name="profile" value="rtx5080m" />
                   <span>
                     <strong>RTX 5080M</strong>
-                    <small>移动端 50 系目标</small>
+                    <small>实验性对照目标，不推荐默认使用</small>
                   </span>
                 </label>
               </div>
@@ -189,7 +189,7 @@
               <label>
                 <input type="radio" name="mode" value="dxgi" checked />
                 <span>DXGI 模式</span>
-                <small>默认推荐，不写注册表。</small>
+                <small>默认推荐，不写注册表；实测光追选项更稳定出现在 4090 profile。</small>
               </label>
               <label>
                 <input type="radio" name="mode" value="full" />
@@ -254,7 +254,7 @@
           <div class="explain-grid">
             <div>
               <h4>成功原理</h4>
-              <p>游戏通过 GPU 型号白名单隐藏光追选项。OptiScaler 在游戏进程内改写 DXGI/Streamline 返回的 GPU 信息，让它看到你选择的本机、4090 或 5080M profile。</p>
+              <p>游戏通过 GPU 型号白名单隐藏光追选项。OptiScaler 在游戏进程内改写 DXGI/Streamline 返回的 GPU 信息，让它看到你选择的本机、4090 或 5080M profile。实测上，4090 profile 能正常出现“光线追踪”选项；5080M profile 目前只看到“全景光追”和“关”。</p>
             </div>
             <div>
               <h4>和注册表改名的区别</h4>
@@ -279,7 +279,7 @@
         </section>
 
         <footer class="footer">
-          <span>异环光追解锁面板 / NTE Ray Tracing Panel <b id="versionText">0.1.6</b></span>
+          <span>异环光追解锁面板 / NTE Ray Tracing Panel <b id="versionText">0.1.7</b></span>
           <button id="shutdownBtn" class="ghost" type="button">退出工具</button>
         </footer>
       </section>

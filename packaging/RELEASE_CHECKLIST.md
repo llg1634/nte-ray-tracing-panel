@@ -3,10 +3,10 @@
 ## Before Build
 
 - [ ] `APP_VERSION` matches `CHANGELOG.md`.
-- [ ] Chinese release title is `异环光追解锁面板：异环光线追踪 / 全景光追一键解锁工具`.
+- [ ] Chinese release title is `异环光线追踪一键部署面板 v0.1.7`.
 - [ ] `README.md` first screen has Chinese search keywords.
 - [ ] `README.en.md` has English search keywords.
-- [ ] WebUI exposes local original, RTX 4090, and RTX 5080M profile choices.
+- [ ] WebUI exposes local original, RTX 4090, and RTX 5080M profile choices, with RTX 4090 selected by default.
 - [ ] Docs mention WebUI and backend exe are separate processes.
 - [ ] Docs mention closing browser tab does not close the exe.
 - [ ] Docs mention the “Exit Tool” button.
@@ -55,8 +55,10 @@ Recommended files:
 Mention:
 
 - NTE ray tracing unlock via OptiScaler DXGI spoof.
-- Selectable GPU profiles: local original, RTX 4090, RTX 5080M.
+- Selectable GPU profiles: local original, RTX 4090, RTX 5080M; RTX 4090 is the default recommendation.
 - Local-only WebUI.
 - Manifest backup and restore.
 - Browser tab close does not exit backend.
 - Default mode does not modify GPU registry.
+- RTX 5080M is documented as experimental and not recommended by default.
+- Ray tracing option visibility depends on the in-game Ultra/Extreme or higher preset.
