@@ -20,7 +20,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
 
-APP_VERSION = "0.1.7"
+APP_VERSION = "0.1.9"
 APP_CN_NAME = "异环光追解锁面板"
 APP_FULL_CN_NAME = "异环光线追踪 / 全景光追一键解锁工具"
 APP_EN_NAME = "NTE Ray Tracing Panel"
@@ -58,6 +58,7 @@ APP_SEARCH_KEYWORDS = [
     "异环 HTGame.exe 光追",
     "异环 OptiScaler",
     "异环 OptiScaler 一键安装",
+    "异环 RTX 5090 spoof",
     "异环 RTX 4090 spoof",
     "异环 RTX 5080M spoof",
     "NTE how to enable ray tracing",
@@ -91,14 +92,17 @@ RESOURCE_DIR = Path(getattr(sys, "_MEIPASS", RUN_DIR))
 WEB_DIR = RESOURCE_DIR / "web"
 TOOLS_DIR = RUN_DIR / "tools" / "optiscaler"
 
+MANIFEST_OWNER = "nte-ray-tracing-panel"
+RUNTIME_LAYOUT = "rt-optiscaler-winmm-v2"
+
 MANAGED_FILES = (
     "winmm.dll",
     "OptiScaler.ini",
     "OptiScaler.log",
-    "dlsstweaks.ini",
-    "dlsstweaks.log",
 )
 MANAGED_DIRS = ("OptiScaler",)
+CANONICAL_MANAGED_RELS = {name.lower() for name in (*MANAGED_FILES, *MANAGED_DIRS)}
+DLSS_PANEL_RELS = {"nvngx.dll", "dlsstweaks.ini", "dlsstweaks.log"}
 BACKUP_DIR_NAME = "_nte_rt_backups"
 
 FALLBACK_LOCAL_PROFILE = {
@@ -112,6 +116,15 @@ FALLBACK_LOCAL_PROFILE = {
 }
 
 STATIC_PROFILES = {
+    "rtx5090": {
+        "id": "rtx5090",
+        "label": "RTX 5090",
+        "gpuName": "NVIDIA GeForce RTX 5090",
+        "vendorId": "0x10de",
+        "deviceId": "0x2B85",
+        "vramGb": "32",
+        "description": "当前默认推荐目标，使用 32GB VRAM 的 RTX 5090 白名单配置。",
+    },
     "rtx4090": {
         "id": "rtx4090",
         "label": "RTX 4090",
@@ -119,7 +132,7 @@ STATIC_PROFILES = {
         "vendorId": "0x10de",
         "deviceId": "0x2684",
         "vramGb": "16",
-        "description": "当前推荐且已实测可正常显示光线追踪选项的白名单目标。",
+        "description": "已验证可正常显示光线追踪选项的备用白名单目标。",
     },
     "rtx5080m": {
         "id": "rtx5080m",
@@ -131,7 +144,7 @@ STATIC_PROFILES = {
         "description": "实验性目标，保留用于对照测试，不作为默认推荐。",
     },
 }
-DEFAULT_PROFILE_ID = "rtx4090"
+DEFAULT_PROFILE_ID = "rtx5090"
 
 
 class AppError(Exception):
@@ -162,6 +175,106 @@ def sha256(path: Path) -> str:
         for chunk in iter(lambda: fh.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest().upper()
+
+
+def normalize_rel(rel: str) -> str:
+    return rel.replace("/", "\\").strip("\\").lower()
+
+
+def rel_name(rel: str) -> str:
+    return normalize_rel(rel).split("\\")[-1]
+
+
+def is_dlss_panel_rel(rel: str) -> bool:
+    return rel_name(rel) in DLSS_PANEL_RELS
+
+
+def is_canonical_managed_rel(rel: str) -> bool:
+    return normalize_rel(rel) in CANONICAL_MANAGED_RELS
+
+
+def contains_bytes(path: Path, needle: bytes, *, limit: int | None = None) -> bool:
+    if not path.is_file():
+        return False
+    remaining = limit
+    with path.open("rb") as fh:
+        while True:
+            if remaining is not None and remaining <= 0:
+                return False
+            size = 1024 * 1024 if remaining is None else min(1024 * 1024, remaining)
+            chunk = fh.read(size)
+            if not chunk:
+                return False
+            if needle in chunk:
+                return True
+            if remaining is not None:
+                remaining -= len(chunk)
+
+
+def looks_like_optiscaler_proxy(path: Path) -> bool:
+    try:
+        return path.is_file() and path.stat().st_size > 1_000_000 and contains_bytes(path, b"OptiScaler")
+    except OSError:
+        return False
+
+
+def looks_like_rt_optiscaler_ini(path: Path) -> bool:
+    if not path.is_file():
+        return False
+    text = path.read_text(encoding="utf-8", errors="replace")
+    return "OptiDllPath" in text and r".\OptiScaler" in text and "TargetProcessName=HTGame.exe" in text
+
+
+def looks_like_optiscaler_dir(path: Path) -> bool:
+    if not path.is_dir():
+        return False
+    return (path / "_source_OptiScaler.ini").is_file() or any(path.glob("*.dll"))
+
+
+def looks_like_optiscaler_log(path: Path) -> bool:
+    if not path.is_file():
+        return False
+    if path.stat().st_size == 0:
+        return True
+    text = path.read_text(encoding="utf-8", errors="replace")
+    return "OptiScaler" in text
+
+
+def directory_fingerprint(path: Path) -> dict:
+    digest = hashlib.sha256()
+    count = 0
+    for file in sorted((item for item in path.rglob("*") if item.is_file()), key=lambda item: str(item.relative_to(path)).lower()):
+        rel = file.relative_to(path).as_posix().lower()
+        digest.update(rel.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(sha256(file).encode("ascii"))
+        digest.update(b"\0")
+        count += 1
+    return {"exists": True, "kind": "dir", "fileCount": count, "sha256": digest.hexdigest().upper()}
+
+
+def item_fingerprint(path: Path) -> dict:
+    if not path.exists():
+        return {"exists": False}
+    if path.is_dir():
+        return directory_fingerprint(path)
+    return {
+        "exists": True,
+        "kind": "file",
+        "size": path.stat().st_size,
+        "sha256": sha256(path),
+    }
+
+
+def fingerprint_matches(path: Path, expected: dict | None) -> bool:
+    if not expected:
+        return False
+    current = item_fingerprint(path)
+    if bool(current.get("exists")) != bool(expected.get("exists")):
+        return False
+    if not current.get("exists"):
+        return True
+    return current.get("kind") == expected.get("kind") and current.get("sha256") == expected.get("sha256")
 
 
 def ensure_under(path: Path, base: Path) -> Path:
@@ -282,6 +395,7 @@ def local_profile_from_adapter(adapters: list[dict] | None = None) -> dict:
 def spoof_profiles(adapters: list[dict] | None = None) -> list[dict]:
     return [
         local_profile_from_adapter(adapters),
+        dict(STATIC_PROFILES["rtx5090"]),
         dict(STATIC_PROFILES["rtx4090"]),
         dict(STATIC_PROFILES["rtx5080m"]),
     ]
@@ -502,6 +616,8 @@ def list_backups(win64: Path) -> list[dict]:
             "id": folder.name,
             "path": str(folder),
             "created": data.get("created"),
+            "owner": data.get("owner") or data.get("tool"),
+            "runtimeLayout": data.get("runtimeLayout"),
             "mode": data.get("mode"),
             "profile": data.get("profile", {}).get("label") or data.get("profile", {}).get("gpuName"),
             "operations": data.get("operations", []),
@@ -527,6 +643,7 @@ def read_ini_values(path: Path) -> dict:
         "UseFakenvapi",
         "TargetProcessName",
         "OptiDllPath",
+        "HookOriginalNvngxOnly",
     }
     for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
         match = re.match(r"\s*([A-Za-z0-9_]+)\s*=\s*(.*)\s*$", line)
@@ -544,9 +661,20 @@ def read_log_summary(path: Path) -> dict:
         "exists": True,
         "size": path.stat().st_size,
         "modified": path.stat().st_mtime,
-        "loaded": "OptiScaler" in text or "DLSSTweaks" in text,
+        "loaded": "OptiScaler" in text,
         "spoofMentioned": "Spoof" in text or "spoof" in text,
         "tail": tail,
+    }
+
+
+def file_summary(path: Path) -> dict:
+    if not path.is_file():
+        return {"exists": False}
+    return {
+        "exists": True,
+        "size": path.stat().st_size,
+        "modified": path.stat().st_mtime,
+        "sha256": sha256(path),
     }
 
 
@@ -554,22 +682,37 @@ def inspect_install(win64: Path) -> dict:
     winmm = win64 / "winmm.dll"
     opt_ini = win64 / "OptiScaler.ini"
     opt_dir = win64 / "OptiScaler"
-    info = {
-        "win64": str(win64),
-        "installed": winmm.is_file() and opt_ini.is_file(),
-        "winmm": None,
-        "optScalerIni": read_ini_values(opt_ini),
-        "optScalerDirExists": opt_dir.is_dir(),
-        "log": read_log_summary(win64 / "OptiScaler.log"),
-        "legacyDlsstweaksIni": (win64 / "dlsstweaks.ini").is_file(),
-    }
+    nvngx = win64 / "nvngx.dll"
+    dlsstweaks_ini = win64 / "dlsstweaks.ini"
+    winmm_info = None
     if winmm.is_file():
-        info["winmm"] = {
+        winmm_info = {
             "size": winmm.stat().st_size,
             "modified": winmm.stat().st_mtime,
             "sha256": sha256(winmm),
-            "looksLikeOptiScaler": winmm.stat().st_size > 5_000_000,
+            "looksLikeOptiScaler": looks_like_optiscaler_proxy(winmm),
         }
+    dlss_panel_installed = nvngx.is_file() and dlsstweaks_ini.is_file()
+    info = {
+        "win64": str(win64),
+        "installed": bool(winmm_info and winmm_info["looksLikeOptiScaler"] and opt_ini.is_file()),
+        "runtimeLayout": RUNTIME_LAYOUT,
+        "managedBy": MANIFEST_OWNER,
+        "winmm": winmm_info,
+        "optScalerIni": read_ini_values(opt_ini),
+        "optScalerDirExists": opt_dir.is_dir(),
+        "log": read_log_summary(win64 / "OptiScaler.log"),
+        "dlssPanel": {
+            "installed": dlss_panel_installed,
+            "status": (
+                "检测到 nvngx.dll + dlsstweaks.ini；DLSS Panel 已安装，RT Panel 只显示兼容状态，不接管这些文件。"
+                if dlss_panel_installed
+                else "未检测到 nvngx.dll + dlsstweaks.ini 的 DLSS Panel 布局。"
+            ),
+            "nvngx": file_summary(nvngx),
+            "dlsstweaksIni": file_summary(dlsstweaks_ini),
+        },
+    }
     return info
 
 
@@ -579,7 +722,13 @@ def backup_path_for(rel: str, backup_dir: Path) -> Path:
 
 def backup_item(game_dir: Path, rel: str, backup_dir: Path, *, kind: str) -> dict:
     source = ensure_under(game_dir / rel, game_dir)
-    record = {"rel": rel, "kind": kind, "existed": source.exists()}
+    record = {
+        "rel": rel,
+        "kind": kind,
+        "owner": MANIFEST_OWNER,
+        "runtimeLayout": RUNTIME_LAYOUT,
+        "existed": source.exists(),
+    }
     if not source.exists():
         return record
     destination = backup_path_for(rel, backup_dir)
@@ -597,9 +746,51 @@ def backup_item(game_dir: Path, rel: str, backup_dir: Path, *, kind: str) -> dic
     return record
 
 
+def current_target_looks_rt_owned(target: Path, rel: str) -> bool:
+    rel = normalize_rel(rel)
+    if not target.exists():
+        return True
+    if rel == "winmm.dll":
+        return looks_like_optiscaler_proxy(target)
+    if rel == "optiscaler.ini":
+        return looks_like_rt_optiscaler_ini(target)
+    if rel == "optiscaler.log":
+        return looks_like_optiscaler_log(target)
+    if rel == "optiscaler":
+        return looks_like_optiscaler_dir(target)
+    return False
+
+
+def restore_record_allowed(record: dict) -> tuple[bool, str | None]:
+    rel = str(record.get("rel", ""))
+    if not rel:
+        return False, "跳过未知记录：缺少 rel"
+    if is_dlss_panel_rel(rel):
+        return False, f"跳过 {rel}：DLSS Panel 文件不由 RT Panel 恢复"
+    if not is_canonical_managed_rel(rel):
+        return False, f"跳过 {rel}：不属于当前 RT Panel runtime layout"
+    owner = record.get("owner")
+    if owner and owner != MANIFEST_OWNER:
+        return False, f"跳过 {rel}：manifest owner={owner}"
+    return True, None
+
+
 def restore_item(game_dir: Path, backup_dir: Path, record: dict) -> str:
+    allowed, reason = restore_record_allowed(record)
+    if not allowed:
+        return reason or "跳过未知记录"
     rel = record["rel"]
     target = ensure_under(game_dir / rel, game_dir)
+    installed = record.get("installed")
+    if target.exists():
+        if installed:
+            safe_to_replace = fingerprint_matches(target, installed)
+            if not safe_to_replace and normalize_rel(rel) == "optiscaler.log":
+                safe_to_replace = looks_like_optiscaler_log(target)
+        else:
+            safe_to_replace = current_target_looks_rt_owned(target, rel)
+        if not safe_to_replace:
+            return f"跳过 {rel}：当前目标不像本工具写入的版本，避免覆盖其他文件"
     if target.exists():
         if target.is_dir():
             shutil.rmtree(target)
@@ -631,6 +822,20 @@ def set_ini_value(lines: list[str], key: str, value: str) -> list[str]:
     return out
 
 
+def set_ini_section_value(lines: list[str], section: str, key: str, value: str) -> list[str]:
+    key_pattern = re.compile(r"^\s*" + re.escape(key) + r"\s*=", re.IGNORECASE)
+    section_pattern = re.compile(r"^\s*\[" + re.escape(section) + r"\]\s*$", re.IGNORECASE)
+    cleaned = [line for line in lines if not key_pattern.match(line)]
+    section_index = next((index for index, line in enumerate(cleaned) if section_pattern.match(line)), None)
+    if section_index is None:
+        if cleaned and cleaned[-1].strip():
+            cleaned.append("")
+        cleaned.extend([f"[{section}]", f"{key}={value}"])
+        return cleaned
+    cleaned.insert(section_index + 1, f"{key}={value}")
+    return cleaned
+
+
 def build_optiscaler_config(template: Path, *, mode: str, target_device_id: str | None, profile: dict) -> str:
     lines = template.read_text(encoding="utf-8", errors="replace").splitlines()
     values = {
@@ -657,6 +862,7 @@ def build_optiscaler_config(template: Path, *, mode: str, target_device_id: str 
         values["NvapiPath"] = r".\OptiScaler\fakenvapi.dll"
     for key, value in values.items():
         lines = set_ini_value(lines, key, value)
+    lines = set_ini_section_value(lines, "Hooks", "HookOriginalNvngxOnly", "true")
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -664,7 +870,10 @@ def copy_optiscaler_payload(stage: dict, game_dir: Path) -> None:
     dll = Path(stage["dll"])
     ini = Path(stage["ini"])
     release_root = dll.parent
-    shutil.copy2(dll, game_dir / "winmm.dll")
+    winmm = game_dir / "winmm.dll"
+    shutil.copy2(dll, winmm)
+    if sha256(dll) != sha256(winmm) or not looks_like_optiscaler_proxy(winmm):
+        raise AppError("winmm.dll 写入后校验失败：目标不是 OptiScaler 代理。", 500)
     opt_dir = game_dir / "OptiScaler"
     if opt_dir.exists():
         shutil.rmtree(opt_dir)
@@ -706,8 +915,13 @@ def install_spoof(
     backup_dir.mkdir(parents=True, exist_ok=True)
     manifest = {
         "created": datetime.now().isoformat(timespec="seconds"),
-        "tool": "nte-ray-tracing-panel",
+        "tool": MANIFEST_OWNER,
+        "owner": MANIFEST_OWNER,
         "version": APP_VERSION,
+        "runtimeLayout": RUNTIME_LAYOUT,
+        "managedFiles": list(MANAGED_FILES),
+        "managedDirs": list(MANAGED_DIRS),
+        "dlssPanelDetected": (win64 / "nvngx.dll").is_file() and (win64 / "dlsstweaks.ini").is_file(),
         "mode": mode,
         "profile": profile,
         "win64": str(win64),
@@ -728,6 +942,11 @@ def install_spoof(
     config = build_optiscaler_config(Path(stage["ini"]), mode=mode, target_device_id=target_device_id, profile=profile)
     (win64 / "OptiScaler.ini").write_text(config, encoding="ascii", errors="ignore")
     manifest["operations"].append(f"写入 OptiScaler.ini GPU spoof 配置: {profile['label']}")
+    manifest["operations"].append("强制 [Hooks] HookOriginalNvngxOnly=true")
+    (win64 / "OptiScaler.log").write_text("", encoding="utf-8")
+    manifest["operations"].append("初始化 OptiScaler.log")
+    for record in manifest["items"]:
+        record["installed"] = item_fingerprint(win64 / record["rel"])
 
     (backup_dir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     return {

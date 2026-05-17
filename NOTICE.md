@@ -20,7 +20,7 @@ This project is not OptiScaler, not an NVIDIA tool, and not a general mod manage
 https://github.com/emoose/DLSSTweaks
 ```
 
-DLSSTweaks is a related graphics injection/wrapper project. `NTE Ray Tracing Panel` does not copy or implement its DLSS render-scale workflow. The panel only recognizes possible legacy `dlsstweaks.ini` and `dlsstweaks.log` files during backup/restore so previous local experiments are not overwritten silently.
+DLSSTweaks is a related graphics injection/wrapper project. `NTE Ray Tracing Panel` does not copy or implement its DLSS render-scale workflow. `nvngx.dll` / `DLSSTweaks` belong to the DLSS Panel; this panel only reports compatibility when `nvngx.dll` + `dlsstweaks.ini` are present and never writes, deletes, or restores those files.
 
 ## Scope
 

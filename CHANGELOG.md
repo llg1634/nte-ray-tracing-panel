@@ -1,5 +1,20 @@
 # 更新日志
 
+## 0.1.9
+
+- 新增 RTX 5090 profile：`SpoofedGPUName=NVIDIA GeForce RTX 5090`、`SpoofedDeviceId=0x2B85`、`DxgiVRAM=32`。
+- 默认推荐 profile 从 RTX 4090 调整为 RTX 5090。
+- RTX 4090 保留为已验证备用 profile，RTX 5080M 继续作为实验性对照项。
+- 同步更新 WebUI、README、FAQ、工作原理和发布材料中的推荐目标说明。
+
+## 0.1.8
+
+- 统一 RT Panel 最小运行时布局：只管理 `winmm.dll`、`OptiScaler.ini`、`OptiScaler.log` 和 `OptiScaler\`。
+- manifest 新增 `owner=nte-ray-tracing-panel` 与 `runtimeLayout=rt-optiscaler-winmm-v2`，恢复时过滤旧版本里的 DLSS Panel 文件记录。
+- `OptiScaler.ini` 强制写入 `[Hooks] HookOriginalNvngxOnly=true`。
+- 检测到 `nvngx.dll` + `dlsstweaks.ini` 时只显示 DLSS Panel 兼容状态，不写入、删除或恢复这些文件。
+- 恢复前增加当前文件校验，避免覆盖用户或另一个 panel 后来写入的文件。
+
 ## 0.1.7
 
 - 默认目标显卡 profile 从 RTX 5080M 调整为 RTX 4090。

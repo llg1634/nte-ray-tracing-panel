@@ -2,14 +2,15 @@
 
 ## 已验证链路
 
-当前机器是 `NVIDIA GeForce RTX 5060 Laptop GPU`。使用 OptiScaler 的 DXGI spoof 后，《异环》内光线追踪选项可以打开。因此本项目把这个已验证链路做成面板，而不是继续走全局注册表改名。当前实测结论是：RTX 4090 profile 最推荐，RTX 5080M 仅保留作实验对照。
+当前机器是 `NVIDIA GeForce RTX 5060 Laptop GPU`。使用 OptiScaler 的 DXGI spoof 后，《异环》内光线追踪选项可以打开。因此本项目把这个已验证链路做成面板，而不是继续走全局注册表改名。当前默认推荐 RTX 5090 profile，RTX 4090 保留为已验证备用，RTX 5080M 仅保留作实验对照。
 
 ## 目标显卡 Profile
 
 安装时先选择目标显卡：
 
 - 本机原配置：读取当前 NVIDIA 显卡名称和 DeviceId，适合回到本机识别。
-- RTX 4090：`NVIDIA GeForce RTX 4090` / `0x2684`。当前默认推荐。
+- RTX 5090：`NVIDIA GeForce RTX 5090` / `0x2B85` / `DxgiVRAM=32`。当前默认推荐。
+- RTX 4090：`NVIDIA GeForce RTX 4090` / `0x2684`。已验证备用。
 - RTX 5080M：`NVIDIA GeForce RTX 5080 Laptop GPU` / `0x2C59`。实验性对照项，不推荐默认使用。
 
 ## 默认 DXGI 模式
@@ -31,6 +32,9 @@ User32=false
 UseFakenvapi=false
 OptiDllPath=.\OptiScaler
 CheckForUpdate=false
+
+[Hooks]
+HookOriginalNvngxOnly=true
 ```
 
 安装文件落点：
@@ -39,10 +43,13 @@ CheckForUpdate=false
 Win64\
   winmm.dll               <- OptiScaler.dll 复制而来
   OptiScaler.ini          <- 本工具生成
+  OptiScaler.log          <- OptiScaler 日志
   OptiScaler\
     *.dll / *.ini         <- OptiScaler 依赖
     D3D12_Optiscaler\
 ```
+
+RT Panel 不管理 `nvngx.dll`、`dlsstweaks.ini` 或 `dlsstweaks.log`。如果这些文件同时存在，面板只把它们显示为 DLSS Panel 已安装的兼容状态。
 
 ## Full 实验模式
 
@@ -83,13 +90,13 @@ Win64\_nte_rt_backups\<timestamp>\manifest.json
 Win64\_nte_rt_backups\<timestamp>\files\...
 ```
 
-manifest 会记录每个文件/目录是否原本存在、备份路径、哈希和安装操作。恢复时只处理 manifest 中记录的项目。
+manifest 会记录每个 RT Panel 文件/目录是否原本存在、备份路径、哈希、安装操作、`owner` 和 `runtimeLayout`。恢复时只处理当前 canonical runtime layout 内的项目，旧 manifest 里的 `nvngx.dll` / `dlsstweaks.ini` 记录会被跳过。
 
 ## 相关项目边界
 
 [OptiScaler](https://github.com/optiscaler/OptiScaler) 是本项目实际使用的 GPU spoof 核心。面板下载并准备 OptiScaler Release，再把 `OptiScaler.dll` 安装为《异环》Win64 目录内的本地 `winmm.dll` 代理。
 
-[DLSSTweaks](https://github.com/emoose/DLSSTweaks) 是相关图形注入/包装项目。这个面板不使用它的 DLSS 比例配置逻辑，只在备份恢复列表里保护旧的 `dlsstweaks.ini`、`dlsstweaks.log`，防止之前的实验文件被静默覆盖。
+[DLSSTweaks](https://github.com/emoose/DLSSTweaks) 是相关图形注入/包装项目。`nvngx.dll` / `DLSSTweaks` 归 DLSS Panel 管理；这个面板不使用它的 DLSS 比例配置逻辑，也不写入、删除或恢复 `nvngx.dll`、`dlsstweaks.ini`。
 
 ## 失败回滚
 

@@ -5,7 +5,7 @@ const state = {
   detected: null,
   lastState: null,
   profiles: [],
-  defaultProfile: "rtx4090",
+  defaultProfile: "rtx5090",
 };
 
 function toast(message, isError = false) {
@@ -52,7 +52,7 @@ function currentMode() {
 }
 
 function currentProfile() {
-  return document.querySelector("input[name='profile']:checked")?.value || state.defaultProfile || "rtx4090";
+  return document.querySelector("input[name='profile']:checked")?.value || state.defaultProfile || "rtx5090";
 }
 
 function processText(processes) {
@@ -149,11 +149,17 @@ function renderInstallState(install) {
     $("#installState").textContent = "未检测。";
     return;
   }
+  const dlssPanel = install.dlssPanel || {};
   const lines = [
     `installed: ${install.installed}`,
+    `runtimeLayout: ${install.runtimeLayout || "rt-optiscaler-winmm-v2"}`,
+    `managedBy: ${install.managedBy || "nte-ray-tracing-panel"}`,
     `winmm: ${install.winmm ? `${install.winmm.size} bytes, optiscaler=${install.winmm.looksLikeOptiScaler}` : "missing"}`,
     `OptiScaler dir: ${install.optScalerDirExists}`,
-    `legacy DLSSTweaks ini: ${install.legacyDlsstweaksIni}`,
+    `DLSS Panel: ${dlssPanel.installed ? "installed / compatible" : "not detected"}`,
+    `nvngx.dll: ${dlssPanel.nvngx?.exists ? "present (DLSS Panel owned)" : "missing"}`,
+    `dlsstweaks.ini: ${dlssPanel.dlsstweaksIni?.exists ? "present (DLSS Panel owned)" : "missing"}`,
+    `compat: ${dlssPanel.status || "RT Panel only manages winmm.dll and OptiScaler files."}`,
     "",
     "[OptiScaler.ini]",
   ];
@@ -161,7 +167,7 @@ function renderInstallState(install) {
   Object.keys(ini).sort().forEach((key) => lines.push(`${key}=${ini[key]}`));
   const matched = findProfileByInstall(install);
   if (matched) {
-    lines.splice(4, 0, `matchedProfile: ${matched.label}`);
+    lines.splice(6, 0, `matchedProfile: ${matched.label}`);
   }
   $("#installState").textContent = lines.join("\n");
 }
