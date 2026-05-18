@@ -73,6 +73,12 @@ NTE how to enable ray tracing, how to enable ray tracing in NTE, Neverness To Ev
 6. 点击“备份并安装光追解锁”。
 7. 启动游戏，把默认画质预设调到“极致”或以上，再在画质设置里检查“光线追踪 / 全景光追”选项。
 
+### OptiScaler `.7z` 解压失败
+
+如果“下载/准备 OptiScaler”时报 `tar.EXE: LZMA codec is unsupported`，这不是本项目 Release `.zip` / `.exe` 损坏，而是 OptiScaler 官方 Release `.7z` 在某些 Windows `tar.exe` 环境下无法解压。当前版本会先用随包内置的 `py7zz` / `7zz` 解压 `.7z`，再 fallback 到 `py7zr`、可用的 `7z.exe` 和 `tar.exe`，并在仍失败时提示手动解压路径。
+
+手动兜底：解压下载到的 OptiScaler `.7z`，把包含 `OptiScaler.dll` 和 `OptiScaler.ini` 的文件放到 `tools/optiscaler/<版本号>` 目录，然后重新运行面板。只设置 `.7z` 默认打开方式不等于修复，因为面板不会调用系统文件关联。
+
 ## 运行与退出
 
 这个工具分成两层：

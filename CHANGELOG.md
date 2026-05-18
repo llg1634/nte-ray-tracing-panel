@@ -1,5 +1,11 @@
 # 更新日志
 
+## 0.1.10
+
+- OptiScaler `.7z` 解压改为优先使用随包内置的 `py7zz` / `7zz`，再 fallback 到 `py7zr`、可用 `7z.exe` 和 `tar.exe`。
+- 解压前清空目标版本目录，避免上次失败留下半截文件。
+- 解压失败时补充 LZMA/LZMA2/BCJ2 原因说明和手动解压到 `tools/optiscaler/<版本号>` 的兜底路径。
+
 ## 0.1.9
 
 - 新增 RTX 5090 profile：`SpoofedGPUName=NVIDIA GeForce RTX 5090`、`SpoofedDeviceId=0x2B85`、`DxgiVRAM=32`。

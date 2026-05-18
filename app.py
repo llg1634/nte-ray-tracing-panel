@@ -20,7 +20,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
 
-APP_VERSION = "0.1.9"
+APP_VERSION = "0.1.10"
 APP_CN_NAME = "异环光追解锁面板"
 APP_FULL_CN_NAME = "异环光线追踪 / 全景光追一键解锁工具"
 APP_EN_NAME = "NTE Ray Tracing Panel"
@@ -555,6 +555,137 @@ def download_file(url: str, target: Path) -> None:
         shutil.copyfileobj(response, fh)
 
 
+def short_error(value: object, *, limit: int = 1600) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return "无详细错误。"
+    if len(text) > limit:
+        return text[:limit].rstrip() + "..."
+    return text
+
+
+def reset_extract_dir(extract_dir: Path) -> Path:
+    target = ensure_under(extract_dir, TOOLS_DIR)
+    if target.exists():
+        shutil.rmtree(target)
+    target.mkdir(parents=True, exist_ok=True)
+    return target
+
+
+def optiscaler_extract_error(archive: Path, extract_dir: Path, attempts: list[dict]) -> AppError:
+    details = "\n".join(f"- {item['method']}: {item['error']}" for item in attempts)
+    message = (
+        "OptiScaler 已下载，但自动解压失败。\n\n"
+        "原因：自动解压链路没有成功。常见情况是当前 Windows tar.exe 不支持 "
+        "OptiScaler .7z 使用的 LZMA/LZMA2/BCJ2 压缩格式。\n\n"
+        "你可以：\n"
+        "1. 点击“重新下载/准备 OptiScaler”重试。\n"
+        f"2. 或手动解压下载到的 .7z：{archive}\n"
+        f"   把包含 OptiScaler.dll 和 OptiScaler.ini 的文件放到 {extract_dir} 目录。\n\n"
+        f"解压尝试：\n{details}"
+    )
+    return AppError(message, 500)
+
+
+def seven_zip_executable_candidates() -> list[str]:
+    names = ("7zz.exe", "7z.exe", "7za.exe") if os.name == "nt" else ("7zz", "7z", "7za")
+    candidates: list[Path] = []
+    for root in (RUN_DIR, RESOURCE_DIR):
+        for name in names:
+            candidates.append(root / "tools" / "7zip" / name)
+            candidates.append(root / name)
+    for env_name in ("ProgramFiles", "ProgramFiles(x86)"):
+        program_root = os.environ.get(env_name)
+        if program_root:
+            for name in names:
+                candidates.append(Path(program_root) / "7-Zip" / name)
+
+    resolved: list[str] = []
+    seen = set()
+    for candidate in candidates:
+        if candidate.is_file():
+            text = str(candidate)
+            key = text.lower()
+            if key not in seen:
+                seen.add(key)
+                resolved.append(text)
+    for name in names:
+        found = shutil.which(name)
+        if found:
+            key = found.lower()
+            if key not in seen:
+                seen.add(key)
+                resolved.append(found)
+    return resolved
+
+
+def extract_with_py7zz(archive: Path, extract_dir: Path) -> None:
+    import logging
+    import py7zz
+
+    logging.getLogger("py7zz").setLevel(logging.WARNING)
+    with py7zz.SevenZipFile(archive, mode="r") as seven_zip:
+        seven_zip.extractall(path=str(extract_dir))
+
+
+def extract_with_py7zr(archive: Path, extract_dir: Path) -> None:
+    import py7zr
+
+    with py7zr.SevenZipFile(archive, mode="r") as seven_zip:
+        seven_zip.extractall(path=str(extract_dir))
+
+
+def extract_with_7zip_command(executable: str, archive: Path, extract_dir: Path) -> None:
+    proc = run_command([executable, "x", "-y", f"-o{extract_dir}", str(archive)], timeout=180)
+    if proc.returncode != 0:
+        raise RuntimeError(short_error(proc.stderr or proc.stdout or "7-Zip 解压失败。"))
+
+
+def extract_archive(archive: Path, extract_dir: Path) -> dict:
+    attempts: list[dict] = []
+
+    if archive.name.lower().endswith(".7z"):
+        try:
+            reset_extract_dir(extract_dir)
+            extract_with_py7zz(archive, extract_dir)
+            return {"method": "py7zz", "fallbacks": attempts}
+        except Exception as exc:
+            attempts.append({"method": "py7zz", "error": short_error(exc)})
+        try:
+            reset_extract_dir(extract_dir)
+            extract_with_py7zr(archive, extract_dir)
+            return {"method": "py7zr", "fallbacks": attempts}
+        except Exception as exc:
+            attempts.append({"method": "py7zr", "error": short_error(exc)})
+
+        seven_zip_candidates = seven_zip_executable_candidates()
+        for executable in seven_zip_candidates:
+            try:
+                reset_extract_dir(extract_dir)
+                extract_with_7zip_command(executable, archive, extract_dir)
+                return {"method": f"7-Zip ({Path(executable).name})", "fallbacks": attempts}
+            except Exception as exc:
+                attempts.append({"method": f"7-Zip ({executable})", "error": short_error(exc)})
+        if not seven_zip_candidates:
+            attempts.append({"method": "7-Zip executable", "error": "未找到 bundled 或已安装的 7z.exe / 7zz.exe。"})
+
+    tar = shutil.which("tar")
+    if tar:
+        try:
+            reset_extract_dir(extract_dir)
+            proc = run_command([tar, "-xf", str(archive), "-C", str(extract_dir)], timeout=180)
+            if proc.returncode != 0:
+                raise RuntimeError(short_error(proc.stderr or proc.stdout or "tar.exe 解压失败。"))
+            return {"method": "tar.exe", "fallbacks": attempts}
+        except Exception as exc:
+            attempts.append({"method": "tar.exe", "error": short_error(exc)})
+    else:
+        attempts.append({"method": "tar.exe", "error": "未找到 Windows tar.exe。"})
+
+    reset_extract_dir(extract_dir)
+    raise optiscaler_extract_error(archive, extract_dir, attempts)
+
+
 def find_optiscaler_stage() -> dict | None:
     if not TOOLS_DIR.is_dir():
         return None
@@ -585,17 +716,11 @@ def ensure_optiscaler(force: bool = False) -> dict:
         shutil.rmtree(extract_dir)
     if force or not archive.is_file():
         download_file(str(release["assetUrl"]), archive)
-    extract_dir.mkdir(parents=True, exist_ok=True)
-    tar = shutil.which("tar")
-    if not tar:
-        raise AppError("未找到 Windows tar.exe，无法解压 OptiScaler .7z。", 500)
-    proc = run_command([tar, "-xf", str(archive), "-C", str(extract_dir)], timeout=180)
-    if proc.returncode != 0:
-        raise AppError(proc.stderr.strip() or "OptiScaler 解压失败。", 500)
+    extraction = extract_archive(archive, extract_dir)
     stage = find_optiscaler_stage()
     if not stage:
         raise AppError("OptiScaler 已下载但未找到 OptiScaler.dll。", 500)
-    stage.update({"downloaded": True, "release": release, "archive": str(archive)})
+    stage.update({"downloaded": True, "release": release, "archive": str(archive), "extractor": extraction["method"]})
     return stage
 
 

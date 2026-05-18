@@ -19,6 +19,7 @@
 - 本机 WebUI：`http://127.0.0.1:22642`
 - 自动检测异环 `HTGame.exe`
 - 一键准备 OptiScaler
+- 内置 `py7zz` / `7zz` 解压 OptiScaler `.7z`，不再把 Windows `tar.exe` 当作主路径
 - 一键部署本地 `winmm.dll` 代理、`OptiScaler.ini`、`OptiScaler\` 和 `OptiScaler.log`
 - 与 DLSS Panel 共存：RT Panel 负责 `winmm.dll` / `OptiScaler`，DLSS Panel 负责 `nvngx.dll` / `DLSSTweaks`
 - 一键备份并安装所选目标显卡 spoof
@@ -35,6 +36,7 @@
 - RTX 5090 profile 是默认推荐：`SpoofedGPUName=NVIDIA GeForce RTX 5090`、`SpoofedDeviceId=0x2B85`、`DxgiVRAM=32`。
 - RTX 4090 保留为已验证备用；RTX 5080M 仅保留作实验对照。
 - 光追选项通常需要默认画质预设在“极致”或以上才会出现。
+- 如果遇到 `tar.EXE: LZMA codec is unsupported`，这是 OptiScaler 官方 `.7z` 自动解压兼容问题，不是本项目 Release `.zip` / `.exe` 损坏；当前版本会先用随包解压器处理，并保留手动解压兜底说明。
 
 ## Core Projects
 

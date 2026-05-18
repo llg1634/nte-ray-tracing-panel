@@ -3,7 +3,7 @@
 ## Before Build
 
 - [ ] `APP_VERSION` matches `CHANGELOG.md`.
-- [ ] Chinese release title is `异环光线追踪一键部署面板 v0.1.9`.
+- [ ] Chinese release title is `异环光线追踪一键部署面板 v0.1.10`.
 - [ ] `README.md` first screen has Chinese search keywords.
 - [ ] `README.en.md` has English search keywords.
 - [ ] WebUI exposes local original, RTX 5090, RTX 4090, and RTX 5080M profile choices, with RTX 5090 selected by default.
@@ -15,6 +15,7 @@
 - [ ] Docs mention RT Panel owns `winmm.dll` / `OptiScaler`, while DLSS Panel owns `nvngx.dll` / `DLSSTweaks`.
 - [ ] Default mode keeps `Registry=false` and `User32=false`.
 - [ ] No ProcMon tooling is present.
+- [ ] OptiScaler `.7z` extraction uses bundled `py7zz` / `7zz` before falling back to `tar.exe`.
 
 ## Verification
 
@@ -63,3 +64,4 @@ Mention:
 - Default mode does not modify GPU registry.
 - RTX 4090 is documented as a verified fallback and RTX 5080M is documented as experimental.
 - Ray tracing option visibility depends on the in-game Ultra/Extreme or higher preset.
+- OptiScaler `.7z` extraction no longer depends on Windows `tar.exe` as the primary path.

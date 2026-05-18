@@ -22,6 +22,10 @@ https://github.com/emoose/DLSSTweaks
 
 DLSSTweaks is a related graphics injection/wrapper project. `NTE Ray Tracing Panel` does not copy or implement its DLSS render-scale workflow. `nvngx.dll` / `DLSSTweaks` belong to the DLSS Panel; this panel only reports compatibility when `nvngx.dll` + `dlsstweaks.ini` are present and never writes, deletes, or restores those files.
 
+## Archive extraction
+
+The packaged panel may include `py7zz` and its bundled `7zz` / `7z.dll` binaries to extract OptiScaler `.7z` archives without depending on the user's Windows `tar.exe` codec support or file associations. Keep the package-provided license files when redistributing builds that include these dependencies.
+
 ## Scope
 
 The default install mode writes only local files under the selected game's `Win64` directory. It does not globally rename the system GPU.

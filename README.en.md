@@ -67,6 +67,12 @@ User32=false
 6. Click "Backup and Install Ray Tracing Unlock".
 7. Launch the game, set the graphics preset to Ultra/Extreme or higher first, then check the ray tracing options.
 
+## OptiScaler `.7z` Extraction Failure
+
+If "Download / Prepare OptiScaler" reports `tar.EXE: LZMA codec is unsupported`, the panel release `.zip` / `.exe` is not damaged. The panel downloads the official OptiScaler Release asset, which is a `.7z` archive. Some Windows `tar.exe` builds cannot decode the LZMA/LZMA2 codec used by that archive.
+
+The current version tries the bundled `py7zz` / `7zz` extractor first, then falls back to `py7zr`, an available `7z.exe`, and finally `tar.exe`. If all automatic paths fail, manually extract the downloaded OptiScaler `.7z` into `tools/optiscaler/<version>` and make sure `OptiScaler.dll` and `OptiScaler.ini` are present. Setting 7-Zip as the default `.7z` app does not help by itself because the panel does not call Windows file association.
+
 ## Tested Notes
 
 - RTX 5090 is the default recommended profile: `SpoofedGPUName=NVIDIA GeForce RTX 5090`, `SpoofedDeviceId=0x2B85`, `DxgiVRAM=32`.

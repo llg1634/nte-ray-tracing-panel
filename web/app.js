@@ -14,7 +14,7 @@ function toast(message, isError = false) {
   node.style.borderColor = isError ? "var(--danger)" : "var(--line)";
   node.classList.add("show");
   clearTimeout(toast.timer);
-  toast.timer = setTimeout(() => node.classList.remove("show"), 4200);
+  toast.timer = setTimeout(() => node.classList.remove("show"), isError ? 12000 : 4200);
 }
 
 async function api(path, options = {}) {

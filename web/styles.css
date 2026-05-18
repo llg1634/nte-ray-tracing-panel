@@ -661,6 +661,7 @@ button.primary {
   color: var(--text);
   background: var(--panel-solid);
   box-shadow: var(--shadow);
+  white-space: pre-wrap;
   opacity: 0;
   transform: translateY(12px);
   transition: 180ms ease;

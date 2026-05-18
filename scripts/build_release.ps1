@@ -1,5 +1,5 @@
 param(
-  [string]$Version = "0.1.7",
+  [string]$Version = "0.1.10",
     [switch]$OneFile
 )
 
@@ -14,11 +14,13 @@ $pyArgs = @(
     '--noconsole',
     '--name', 'NTERayTracingPanel',
     '--add-data', 'web;web',
+    '--collect-all', 'py7zz',
+    '--collect-submodules', 'py7zr',
     'app.py'
 )
 
 if ($OneFile) {
-    $pyArgs = @('-m', 'PyInstaller', '--noconsole', '--onefile', '--name', 'NTERayTracingPanel', '--add-data', 'web;web', 'app.py')
+    $pyArgs = @('-m', 'PyInstaller', '--noconsole', '--onefile', '--name', 'NTERayTracingPanel', '--add-data', 'web;web', '--collect-all', 'py7zz', '--collect-submodules', 'py7zr', 'app.py')
 }
 
 python @pyArgs
