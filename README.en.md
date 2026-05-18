@@ -4,6 +4,8 @@ Search keywords: NTE how to enable ray tracing, how to enable ray tracing in NTE
 
 `NTE Ray Tracing Panel` is a one-click ray tracing tool for players searching how to enable ray tracing in Neverness To Everness / Ananta or why the ray tracing option is missing. It automatically prepares OptiScaler, installs the local `winmm.dll` proxy, `OptiScaler.ini`, `OptiScaler\`, and `OptiScaler.log`, lets you pick a GPU spoof profile, creates a manifest backup, and provides restore and logs.
 
+Important note: the ray tracing option usually appears only when the stock graphics preset is set to Ultra/Extreme or higher. After switching to a lower custom preset, the UI option may disappear while the already-applied ray tracing state can remain active.
+
 Chinese aliases for search: 异环怎么开光追, 异环光追怎么开, 异环全景光追怎么开, 异环没有光追选项, 异环光追打不开, 异环光追开不了, 异环 RTX 5060 怎么开光追, 异环 RTX 4060 怎么开光追, 异环光追一键开启, 异环光追一键安装, 异环光追工具.
 
 Local URL:
@@ -70,8 +72,6 @@ User32=false
 - RTX 5090 is the default recommended profile: `SpoofedGPUName=NVIDIA GeForce RTX 5090`, `SpoofedDeviceId=0x2B85`, `DxgiVRAM=32`.
 - RTX 4090 profile is kept as a verified fallback.
 - RTX 5080M currently only exposes "Panorama Ray Tracing" and "Off", so it is not recommended as the default.
-- The ray tracing option usually appears only when the stock graphics preset is set to Ultra/Extreme or higher. After switching to a lower custom preset, the UI option may disappear while the already-applied effect can remain active.
-
 ## Core Projects and Thanks
 
 - [OptiScaler](https://github.com/optiscaler/OptiScaler): the GPU spoofing payload used by this panel. The panel prepares OptiScaler from its official GitHub Release and installs `OptiScaler.dll` as a local `winmm.dll` proxy under the selected NTE `Win64` directory.
